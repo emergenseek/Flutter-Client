@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'nav_menu.dart';
-import 'contacts.dart';
+import 'location_updates.dart';
 import 'service_locator.dart';
 import 'sos.dart';
+import 'settings.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -10,24 +11,21 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       drawer: NavMenu(),
       appBar: AppBar(
-        /*
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'EmergenSeek',
-          onPressed: () {},
-        ),*/
         title: Text('Home'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SettingsHome()));
+            },
+          )
+        ],
       ),
       body: Center(child: HomeButtons()),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'S.O.S.',
-        child: Icon(Icons.error_outline, size: 35.0),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-              builder: (context) => SOSPage()
-          ));
-        },
-      ),
     );
   }
 }
@@ -36,65 +34,73 @@ class HomeButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //padding: EdgeInsets.all(20.0),
+        color: Colors.blueGrey[400],
+        //color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Text(
+              'Welcome to EmergenSeek!',
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 70.0),
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 RawMaterialButton(
-                    padding: EdgeInsets.all(15.0),
+                    padding: EdgeInsets.all(20.0),
                     shape: new CircleBorder(),
-                    fillColor: Colors.white70,
+                    fillColor: Colors.white,
                     child: new Icon(
-                      Icons.my_location,
-                      color: Colors.lightBlueAccent,
-                      size: 70.0,
+                      Icons.room,
+                      color: Colors.lightBlue[200],
+                      size: 90.0,
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => ServiceLocatorPage()
-                      ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ServiceLocatorPage()));
+                    }),
+                RawMaterialButton(
+                    padding: EdgeInsets.all(20.0),
+                    shape: new CircleBorder(),
+                    fillColor: Colors.white,
+                    child: new Icon(
+                      Icons.notifications_none,
+                      color: Colors.lightBlue[200],
+                      size: 90.0,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LocationUpdatesPage()));
                     }),
               ],
             ),
             Padding(
-              padding: EdgeInsets.all(30.0),
+              padding: EdgeInsets.all(32.0),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               RawMaterialButton(
-                  padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.all(20.0),
                   shape: new CircleBorder(),
-                  fillColor: Colors.white70,
+                  fillColor: Colors.white,
                   child: new Icon(
                     Icons.error_outline,
-                    color: Colors.lightBlueAccent,
-                    size: 70.0,
+                    color: Colors.lightBlue[200],
+                    size: 90.0,
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => SOSPage()
-                    ));
-                  }),
-              RawMaterialButton(
-                  padding: EdgeInsets.all(15.0),
-                  shape: new CircleBorder(),
-                  fillColor: Colors.white70,
-                  child: new Icon(
-                    Icons.person_outline,
-                    color: Colors.lightBlueAccent,
-                    size: 70.0,
-                  ),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ContactsPage()
-                    ));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SOSPage()));
                   }),
             ])
           ],
         ));
   }
-
 }

@@ -9,8 +9,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'EmergenSeek Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.lightBlueAccent,
+        primaryColor: Colors.lightBlue[200],
       ),
       home: HomePage(),
     );
