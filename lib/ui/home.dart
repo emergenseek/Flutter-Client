@@ -52,11 +52,12 @@ class HomeButtons extends StatelessWidget {
               children: <Widget>[
                 RawMaterialButton(
                     padding: EdgeInsets.all(20.0),
+                    elevation: 10.0,
                     shape: new CircleBorder(),
                     fillColor: Colors.white,
                     child: new Icon(
                       Icons.room,
-                      color: Colors.lightBlue[200],
+                      color: Colors.blue[200],
                       size: 90.0,
                     ),
                     onPressed: () {
@@ -67,11 +68,12 @@ class HomeButtons extends StatelessWidget {
                     }),
                 RawMaterialButton(
                     padding: EdgeInsets.all(20.0),
+                    elevation: 10.0,
                     shape: new CircleBorder(),
                     fillColor: Colors.white,
                     child: new Icon(
                       Icons.notifications_none,
-                      color: Colors.lightBlue[200],
+                      color: Colors.blue[200],
                       size: 90.0,
                     ),
                     onPressed: () {
@@ -88,11 +90,12 @@ class HomeButtons extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               RawMaterialButton(
                   padding: EdgeInsets.all(20.0),
+                  elevation: 10.0,
                   shape: new CircleBorder(),
                   fillColor: Colors.white,
                   child: new Icon(
                     Icons.error_outline,
-                    color: Colors.lightBlue[200],
+                    color: Colors.blue[200],
                     size: 90.0,
                   ),
                   onPressed: () {

@@ -12,93 +12,103 @@ class NavMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: Container(
-            color: Colors.blueGrey[400],
-            child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-              Container(
-                height: 170.0,
-                child: DrawerHeader(
-                  //child: Text("Navigation Menu"),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [
-                          0.1,
-                          0.3,
-                          0.5,
-                          0.7,
-                          0.9
-                        ],
-                        colors: [
-                          Colors.lightBlue[200],
-                          Colors.lightBlue[100],
-                          Colors.lightBlue[50],
-                          Colors.lightBlue[100],
-                          Colors.lightBlue[200]
-                        ]),
-                    color: Colors.lightBlue[200],
-                    image: DecorationImage(
-                      image: ExactAssetImage('images/logo-text.png'),
-                      fit: BoxFit.scaleDown,
+            color: Theme.of(context).primaryColor,
+            child: ListTileTheme(
+                iconColor: Colors.white,
+                textColor: Colors.white,
+                child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+                  Container(
+                    height: 170.0,
+                    child: DrawerHeader(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            stops: [
+                              0.0,
+                              0.2,
+                              0.4,
+                              0.6,
+                              0.8,
+                              1.0,
+                            ],
+                            colors: [
+                              Colors.blue[200],
+                              Colors.blue[100],
+                              Colors.blue[50],
+                              Colors.blue[50],
+                              Colors.blue[100],
+                              Colors.blue[200],
+                            ]),
+                        color: Theme.of(context).accentColor,
+                        image: DecorationImage(
+                          image: ExactAssetImage('images/logo-text.png'),
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text("Home"),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.room),
-                  title: Text("Service Locator"),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ServiceLocatorPage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.notifications),
-                  title: Text("Location Updates"),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LocationUpdatesPage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.error),
-                  title: Text("S.O.S."),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SOSPage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text("Profile"),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.people),
-                  title: Text("Contacts"),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ContactsPage()));
-                  }),
-              ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text("About"),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AboutPage()));
-                  }),
-            ])));
+                  ListTile(
+                      leading: Icon(Icons.home),
+                      title: Text("Home"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.room),
+                      title: Text("Service Locator"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ServiceLocatorPage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.notifications),
+                      title: Text("Location Updates"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LocationUpdatesPage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.error),
+                      title: Text("S.O.S."),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SOSPage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text("Profile"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.people),
+                      title: Text("Contacts"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ContactsPage()));
+                      }),
+                  ListTile(
+                      leading: Icon(Icons.info),
+                      title: Text("About"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AboutPage()));
+                      }),
+                ]))));
   }
 }
