@@ -38,10 +38,8 @@ class SettingsHome extends StatelessWidget {
                   leading: Icon(Icons.error),
                   title: Text('S.O.S. Alert Settings'),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsSOS()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SettingsSOS()));
                   },
                 ),
                 ListTile(
@@ -69,7 +67,7 @@ class SettingsHome extends StatelessWidget {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////Service Locator Settings///////////////////////////
 
 class SettingsServiceLocator extends StatefulWidget {
   @override
@@ -101,7 +99,7 @@ class SettingsServiceLocatorState extends State<SettingsServiceLocator> {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////Location Updates Settings///////////////////////////
 
 class SettingsLocationUpdates extends StatefulWidget {
   @override
@@ -125,15 +123,15 @@ class SettingsLocationUpdatesState extends State<SettingsLocationUpdates> {
             child: ListView(
               children: <Widget>[
                 ListTile(
-                  //leading: Icon(Icons.room),
-                  //title: Text('Service Locator Options')
-                )
+                    //leading: Icon(Icons.room),
+                    //title: Text('Service Locator Options')
+                    )
               ],
             )));
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////SOS Settings///////////////////////////
 
 class SettingsSOS extends StatefulWidget {
   @override
@@ -143,6 +141,18 @@ class SettingsSOS extends StatefulWidget {
 }
 
 class SettingsSOSState extends State<SettingsSOS> {
+
+  Map<String, bool> values = {
+    'displayInfo': false,
+    'notifyUsers': false,
+  };
+
+  void onChanged(String key){
+    setState((){
+       values[key] = !values[key];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -156,16 +166,24 @@ class SettingsSOSState extends State<SettingsSOS> {
             iconColor: Colors.blue[200],
             child: ListView(
               children: <Widget>[
-                ListTile(
-                  //leading: Icon(Icons.room),
-                  //title: Text('Service Locator Options')
-                )
+                CheckboxListTile(
+                  title: Text("Display Lockscreen Info"),
+                  activeColor: Colors.blue[200],
+                  value: values['displayInfo'],
+                  onChanged: (value) {onChanged('displayInfo');},
+                ),
+                CheckboxListTile(
+                  title: Text("Notify Nearby Users"),
+                  activeColor: Colors.blue[200],
+                  value: values['notifyUsers'],
+                  onChanged: (value) {onChanged('notifyUsers');},
+                ),
               ],
             )));
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////Profile Settings///////////////////////////
 
 class SettingsProfile extends StatefulWidget {
   @override
@@ -189,15 +207,15 @@ class SettingsProfileState extends State<SettingsProfile> {
             child: ListView(
               children: <Widget>[
                 ListTile(
-                  //leading: Icon(Icons.room),
-                  //title: Text('Service Locator Options')
-                )
+                    //leading: Icon(Icons.room),
+                    //title: Text('Service Locator Options')
+                    )
               ],
             )));
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////Contact Settings///////////////////////////
 
 class SettingsContacts extends StatefulWidget {
   @override
@@ -221,9 +239,9 @@ class SettingsContactsState extends State<SettingsContacts> {
             child: ListView(
               children: <Widget>[
                 ListTile(
-                  //leading: Icon(Icons.room),
-                  //title: Text('Service Locator Options')
-                )
+                    //leading: Icon(Icons.room),
+                    //title: Text('Service Locator Options')
+                    )
               ],
             )));
   }

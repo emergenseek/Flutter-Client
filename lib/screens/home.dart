@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'nav_menu.dart';
-import 'location_updates.dart';
-import 'service_locator.dart';
-import 'sos.dart';
-import 'settings.dart';
+import 'package:flutter_app/screens/nav_menu.dart';
+import 'package:flutter_app/screens/location_updates.dart';
+import 'package:flutter_app/screens/service_locator.dart';
+import 'package:flutter_app/screens/sos.dart';
+import 'package:flutter_app/screens/settings.dart';
 
 class HomePage extends StatelessWidget {
   @override

@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
-import 'nav_menu.dart';
-import 'sos_quick_button.dart';
-import 'settings.dart';
+import 'package:flutter_app/screens/nav_menu.dart';
+import 'package:flutter_app/screens/sos_quick_button.dart';
+import 'package:flutter_app/screens/settings.dart';
 
-class ProfilePage extends StatefulWidget {
+class ContactsPage extends StatefulWidget {
   @override
-  _ProfilePageState createState() {
-    return new _ProfilePageState();
+  _ContactsPageState createState() {
+    return new _ContactsPageState();
   }
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ContactsPageState extends State<ContactsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Colors.blueGrey[400],
         drawer: NavMenu(),
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("Contacts"),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.settings),
               tooltip: 'Settings',
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingsProfile()));
+                    MaterialPageRoute(builder: (context) => SettingsContacts()));
               },
             )
           ],
         ),
         body: Center(
-          child: Text("Profile Page Placeholder"),
+          child: Text("Contacts Page Placeholder"),
         ),
         floatingActionButton: QuickSOS());
   }

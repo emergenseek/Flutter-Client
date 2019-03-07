@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import './ui/home.dart';
+import 'package:flutter_app/screens/home.dart';
+import 'package:flutter_app/screens/service_locator.dart';
+import 'package:flutter_app/screens/location_updates.dart';
+import 'package:flutter_app/screens/sos.dart';
+import 'package:flutter_app/screens/profile.dart';
+import 'package:flutter_app/screens/contacts.dart';
+import 'package:flutter_app/screens/about.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +26,15 @@ class MyApp extends StatelessWidget {
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.white),
           )),
       home: HomePage(),
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext context) => HomePage(),
+        '/service_locator': (BuildContext context) => ServiceLocatorPage(),
+        '/location_updates': (BuildContext context) => LocationUpdatesPage(),
+        '/sos': (BuildContext context) => SOSPage(),
+        '/profile': (BuildContext context) => ProfilePage(),
+        '/contacts': (BuildContext context) => ContactsPage(),
+        '/about': (BuildContext context) => AboutPage(),
+      },
     );
   }
 }

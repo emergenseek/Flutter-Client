@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
-import 'nav_menu.dart';
-import 'sos_quick_button.dart';
-import 'settings.dart';
+import 'package:flutter_app/screens/nav_menu.dart';
+import 'package:flutter_app/screens/sos_quick_button.dart';
+import 'package:flutter_app/screens/settings.dart';
 
-class LocationUpdatesPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _LocationUpdatesPageState createState() {
-    return new _LocationUpdatesPageState();
+  _ProfilePageState createState() {
+    return new _ProfilePageState();
   }
 }
 
-class _LocationUpdatesPageState extends State<LocationUpdatesPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Colors.blueGrey[400],
         drawer: NavMenu(),
         appBar: AppBar(
-          title: Text("Location Updates"),
+          title: Text("Profile"),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.settings),
               tooltip: 'Settings',
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingsLocationUpdates()));
+                    MaterialPageRoute(builder: (context) => SettingsProfile()));
               },
             )
           ],
         ),
         body: Center(
-          child: Text("Location Updates Page Placeholder"),
+          child: Text("Profile Page Placeholder"),
         ),
         floatingActionButton: QuickSOS());
   }

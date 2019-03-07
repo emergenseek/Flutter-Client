@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'nav_menu.dart';
-import 'settings.dart';
+import 'package:flutter_app/util/animations.dart';
+import 'package:flutter_app/screens/nav_menu.dart';
+import 'package:flutter_app/screens/settings.dart';
 
 class SOSPage extends StatefulWidget {
+  static _SOSPageState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<_SOSPageState>());
   @override
-  _SOSPageState createState() {
-    return new _SOSPageState();
-  }
+  _SOSPageState createState() => _SOSPageState();
 }
 
 class _SOSPageState extends State<SOSPage> {
   bool _notifyUsers = false;
-  bool _lockscreenInfo = true;
+  bool _displayLockscreenInfo = true;
   bool _sosActive = false;
-  double _holdValue = 0.0;
 
   void activateSOS() {
     setState(() {
@@ -40,10 +39,17 @@ class _SOSPageState extends State<SOSPage> {
           ],
         ),
         body: Center(
-            child: Column(
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            _sosActive == true ? ShowUp(
+              child: Text("S.O.S. Alert Broadcasted", style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300)),
+              delay: 500,
+            ) : Container(),
+            Padding(
+              padding: EdgeInsets.all(32.0),
+            ),
             Stack(
               alignment: Alignment.center,
               children: <Widget>[
@@ -51,10 +57,10 @@ class _SOSPageState extends State<SOSPage> {
                     padding: EdgeInsets.all(15.0),
                     elevation: 10.0,
                     shape: new CircleBorder(),
-                    fillColor: _sosActive == false ? Colors.white : Colors.red,
+                    fillColor: _sosActive == false ? Colors.white : Colors.black,
                     child: new Icon(
                       Icons.error_outline,
-                      color: _sosActive == false ? Colors.blue[200] : Colors.black,
+                      color: _sosActive == false ? Colors.blue[200] : Colors.red,
                       size: 150.0,
                     ),
                     onPressed: () {}),
@@ -75,6 +81,8 @@ class LoadingButton extends StatefulWidget {
 
 class _LoadingButtonState extends State<LoadingButton> with SingleTickerProviderStateMixin {
   AnimationController controller;
+
+  bool _sosActive = false;
 
   @override
   void initState() {
@@ -99,7 +107,11 @@ class _LoadingButtonState extends State<LoadingButton> with SingleTickerProvider
             controller.reverse();
           }
           else if (controller.status == AnimationStatus.completed) {
-            //TODO: Notify SOSPage state to activate SOS
+            // Notify SOSPage widget of hold completion
+            SOSPage.of(context).activateSOS();
+            setState(() {
+              _sosActive = true;
+            });
           }
         },
         child: Stack(
@@ -118,7 +130,7 @@ class _LoadingButtonState extends State<LoadingButton> with SingleTickerProvider
                 width: 200.0,
               child: CircularProgressIndicator(
                 value: controller.value,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[200]),
+                valueColor: AlwaysStoppedAnimation<Color>(_sosActive == false ? Colors.blue[200] : Colors.red),
               )
             ),
           ],

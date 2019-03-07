@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'about.dart';
-import 'contacts.dart';
-import 'home.dart';
-import 'location_updates.dart';
-import 'profile.dart';
-import 'service_locator.dart';
-import 'sos.dart';
+import 'package:flutter_app/screens/about.dart';
+import 'package:flutter_app/screens/contacts.dart';
+import 'package:flutter_app/screens/home.dart';
+import 'package:flutter_app/screens/location_updates.dart';
+import 'package:flutter_app/screens/profile.dart';
+import 'package:flutter_app/screens/service_locator.dart';
+import 'package:flutter_app/screens/sos.dart';
 
 class NavMenu extends StatelessWidget {
   @override
@@ -52,62 +52,43 @@ class NavMenu extends StatelessWidget {
                       leading: Icon(Icons.home),
                       title: Text("Home"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePage()));
+                        Navigator.of(context).pushNamed('/home');
                       }),
                   ListTile(
                       leading: Icon(Icons.room),
                       title: Text("Service Locator"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ServiceLocatorPage()));
+                        Navigator.of(context).pushNamed('/service_locator');
                       }),
                   ListTile(
                       leading: Icon(Icons.notifications),
                       title: Text("Location Updates"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LocationUpdatesPage()));
+                        Navigator.of(context).pushNamed('/location_updates');
                       }),
                   ListTile(
                       leading: Icon(Icons.error),
                       title: Text("S.O.S."),
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SOSPage()));
+                        Navigator.of(context).pushNamed('/sos');
                       }),
                   ListTile(
                       leading: Icon(Icons.person),
                       title: Text("Profile"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfilePage()));
+                        Navigator.of(context).pushNamed('/profile');
                       }),
                   ListTile(
                       leading: Icon(Icons.people),
                       title: Text("Contacts"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContactsPage()));
+                        Navigator.of(context).pushNamed('/contacts');
                       }),
                   ListTile(
                       leading: Icon(Icons.info),
                       title: Text("About"),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AboutPage()));
+                        Navigator.of(context).pushNamed('/about');
                       }),
                 ]))));
   }

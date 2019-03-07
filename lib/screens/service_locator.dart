@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'nav_menu.dart';
-import 'sos_quick_button.dart';
-import 'settings.dart';
+import 'package:flutter_app/screens/nav_menu.dart';
+import 'package:flutter_app/screens/sos_quick_button.dart';
+import 'package:flutter_app/screens/settings.dart';
 
 class ServiceLocatorPage extends StatefulWidget {
   @override
