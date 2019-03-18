@@ -1,5 +1,6 @@
 ## EmergenSeek Client
 The mobile client for the EmergenSeek platform, developed using Google's Flutter framework.
+
 Trello Board: https://trello.com/b/D9rcz38x/mobile-client
 
 ## Setup
