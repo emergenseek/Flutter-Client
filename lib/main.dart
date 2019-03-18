@@ -6,8 +6,19 @@ import 'package:flutter_app/screens/sos.dart';
 import 'package:flutter_app/screens/profile.dart';
 import 'package:flutter_app/screens/contacts.dart';
 import 'package:flutter_app/screens/about.dart';
+import 'package:flutter_app/models/sos_model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  final sos = SOSModel();
+
+  runApp(
+    ScopedModel<SOSModel>(
+      model: sos,
+      child: MyApp(),
+    )
+  );
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

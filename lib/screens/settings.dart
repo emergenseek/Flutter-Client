@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_app/models/sos_model.dart';
 
 class SettingsHome extends StatelessWidget {
   @override
@@ -141,45 +143,57 @@ class SettingsSOS extends StatefulWidget {
 }
 
 class SettingsSOSState extends State<SettingsSOS> {
-
   Map<String, bool> values = {
     'displayInfo': false,
     'notifyUsers': false,
   };
 
-  void onChanged(String key){
-    setState((){
-       values[key] = !values[key];
+  void onChanged(String key) {
+    setState(() {
+      values[key] = !values[key];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        backgroundColor: Theme.of(context).accentColor,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text("S.O.S. Alert Settings"),
-        ),
-        body: ListTileTheme(
-            textColor: Colors.white,
-            iconColor: Colors.blue[200],
-            child: ListView(
-              children: <Widget>[
-                CheckboxListTile(
-                  title: Text("Display Lockscreen Info"),
-                  activeColor: Colors.blue[200],
-                  value: values['displayInfo'],
-                  onChanged: (value) {onChanged('displayInfo');},
-                ),
-                CheckboxListTile(
-                  title: Text("Notify Nearby Users"),
-                  activeColor: Colors.blue[200],
-                  value: values['notifyUsers'],
-                  onChanged: (value) {onChanged('notifyUsers');},
-                ),
-              ],
-            )));
+    return ScopedModelDescendant<SOSModel>(
+        builder: (context, child, sos) => Scaffold(
+            backgroundColor: Theme.of(context).accentColor,
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Text("S.O.S. Alert Settings"),
+            ),
+            body: ListTileTheme(
+                textColor: Colors.white,
+                iconColor: Colors.blue[200],
+                child: ListView(
+                  children: <Widget>[
+                    CheckboxListTile(
+                      title: Text("Display Lockscreen Info"),
+                      subtitle: Text(
+                          "Enable to display personalized information on"
+                          " the lockscreen after activating SOS mode",
+                          style: TextStyle(fontSize: 11.0)),
+                      activeColor: Colors.blue[200],
+                      value: sos.getDisplayLockscreenInfo(),//values['displayInfo'],
+                      onChanged: (value) {
+                        sos.toggleDisplayLockscreenInfo();//onChanged('displayInfo');
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text("Notify Nearby Users"),
+                      subtitle: Text(
+                          "Enable to broadcast nearby EmergenSeek users"
+                          " of your SOS alerts",
+                          style: TextStyle(fontSize: 11.0)),
+                      activeColor: Colors.blue[200],
+                      value: sos.getNotifyUsers(),//values['notifyUsers'],
+                      onChanged: (value) {
+                        sos.toggleNotifyUsers();//onChanged('notifyUsers');
+                      },
+                    ),
+                  ],
+                ))));
   }
 }
 
