@@ -1,16 +1,22 @@
-# flutter_app
+## EmergenSeek Client
+The mobile client for the EmergenSeek platform, developed using Google's Flutter framework.
+Trello Board: https://trello.com/b/D9rcz38x/mobile-client
 
-A new Flutter application.
+## Setup
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+- `/models`
+    - Models of various widgets providing persistent state data
+- `/screens`
+    - The views of the application
+- `/services`
+    - Extra functionalities such as user authentication and mapping
+- `/util`
+    - Handy widgets used in constructing others
+    
+### References
+  - https://pub.dartlang.org/packages/scoped_model
+  - https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple
+  - https://codelabs.developers.google.com/codelabs/flutter-firebase/#0
+  - https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5
