@@ -8,6 +8,7 @@ import 'package:EmergenSeek/screens/contacts.dart';
 import 'package:EmergenSeek/screens/about.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:EmergenSeek/screens/login_page.dart';
 
 void main() {
   final sos = SOSModel();
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
             title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic, color: Colors.white),
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.white),
           )),
-      home: HomePage(),
+      home: LoginPage(),//HomePage(),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => HomePage(),
         '/service_locator': (BuildContext context) => ServiceLocatorPage(),

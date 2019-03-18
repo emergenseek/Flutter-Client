@@ -4,6 +4,7 @@ import 'package:EmergenSeek/screens/location_updates.dart';
 import 'package:EmergenSeek/screens/service_locator.dart';
 import 'package:EmergenSeek/screens/sos.dart';
 import 'package:EmergenSeek/screens/settings.dart';
+import 'package:EmergenSeek/util/animations.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -40,9 +41,12 @@ class HomeButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Welcome to EmergenSeek!',
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+            ShowUp(
+              child: Text(
+                'Welcome to EmergenSeek!',
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+              ),
+              delay: 350
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 70.0),
