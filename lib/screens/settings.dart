@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:flutter_app/models/sos_model.dart';
+import 'package:EmergenSeek/models/sos_model.dart';
 
 class SettingsHome extends StatelessWidget {
   @override

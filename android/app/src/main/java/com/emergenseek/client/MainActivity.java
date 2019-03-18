@@ -1,4 +1,4 @@
-package demo.flutterapp;
+package com.emergenseek.client;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

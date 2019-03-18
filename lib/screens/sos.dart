@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/util/animations.dart';
-import 'package:flutter_app/screens/nav_menu.dart';
-import 'package:flutter_app/screens/settings.dart';
+import 'package:EmergenSeek/util/animations.dart';
+import 'package:EmergenSeek/screens/nav_menu.dart';
+import 'package:EmergenSeek/screens/settings.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:flutter_app/models/sos_model.dart';
+import 'package:EmergenSeek/models/sos_model.dart';
 
 // SOS Screen itself, contains an app bar and the SOS button
 class SOSPage extends StatelessWidget {

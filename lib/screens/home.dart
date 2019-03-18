@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/nav_menu.dart';
-import 'package:flutter_app/screens/location_updates.dart';
-import 'package:flutter_app/screens/service_locator.dart';
-import 'package:flutter_app/screens/sos.dart';
-import 'package:flutter_app/screens/settings.dart';
+import 'package:EmergenSeek/screens/nav_menu.dart';
+import 'package:EmergenSeek/screens/location_updates.dart';
+import 'package:EmergenSeek/screens/service_locator.dart';
+import 'package:EmergenSeek/screens/sos.dart';
+import 'package:EmergenSeek/screens/settings.dart';
 
 class HomePage extends StatelessWidget {
   @override

@@ -1,11 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/about.dart';
-import 'package:flutter_app/screens/contacts.dart';
-import 'package:flutter_app/screens/home.dart';
-import 'package:flutter_app/screens/location_updates.dart';
-import 'package:flutter_app/screens/profile.dart';
-import 'package:flutter_app/screens/service_locator.dart';
-import 'package:flutter_app/screens/sos.dart';
 
 class NavMenu extends StatelessWidget {
   @override

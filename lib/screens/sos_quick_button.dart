@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/sos.dart';
+import 'package:EmergenSeek/screens/sos.dart';
 
 class QuickSOS extends StatelessWidget {
   @override

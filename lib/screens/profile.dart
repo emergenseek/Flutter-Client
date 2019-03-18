@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/nav_menu.dart';
-import 'package:flutter_app/screens/sos_quick_button.dart';
-import 'package:flutter_app/screens/settings.dart';
+import 'package:EmergenSeek/screens/nav_menu.dart';
+import 'package:EmergenSeek/screens/sos_quick_button.dart';
+import 'package:EmergenSeek/screens/settings.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
