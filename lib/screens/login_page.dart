@@ -1,23 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:EmergenSeek/services/auth.dart';
 
 class LoginPage extends StatefulWidget {
+  LoginPage({this.auth, this.onSignedIn});
+
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+
   @override
   _LoginPageState createState() {
     return new _LoginPageState();
   }
 }
 
+// Values representing the form state
 enum FormMode { LOGIN, SIGNUP }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = new GlobalKey<FormState>();
+
   String _email;
   String _password;
+  String _errorMessage;
 
-  // Initial form is login form
+  // Used in changing error message parsing
+  bool _isLoading;
+  bool _isIOS;
+
+  // Default form mode is login
   FormMode _formMode = FormMode.LOGIN;
 
   @override
+  void initState() {
+    _errorMessage = "";
+    _isLoading = false;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Check if running on IOS
+    _isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
         backgroundColor: Colors.blueGrey[400],
         appBar: AppBar(
@@ -27,11 +50,23 @@ class _LoginPageState extends State<LoginPage> {
         body: Stack(
           children: <Widget>[
             _showBody(),
-            //_showCircularProgress(),
+            _showCircularProgress(),
           ],
         ));
   }
 
+  // Progress indicator displayed during authentication
+  Widget _showCircularProgress() {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+
+  // EmergenSeek logo
   Widget _showLogo() {
     return new Hero(
         tag: 'hero',
@@ -44,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
             )));
   }
 
+  // Email input field
   Widget _showEmailInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 0.0),
@@ -66,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Password input field
   Widget _showPasswordInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
@@ -85,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Login/Create Account button
   Widget _showPrimaryButton() {
     return new Padding(
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
@@ -95,20 +133,143 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.white,
           child: _formMode == FormMode.LOGIN
               ? new Text('Login',
-              style: new TextStyle(fontSize: 20.0, color: Colors.blue[200]))
+                  style: new TextStyle(fontSize: 20.0, color: Colors.blue[200]))
               : new Text('Create account',
-              style: new TextStyle(fontSize: 20.0, color: Colors.blue[200])),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/home');
-          }
+                  style:
+                      new TextStyle(fontSize: 20.0, color: Colors.blue[200])),
+          onPressed: _validateAndSubmit,
         ));
+  }
+
+  // Button for switching between login and account creation forms
+  Widget _showSecondaryButton() {
+    return new FlatButton(
+      child: _formMode == FormMode.LOGIN
+          ? new Text('Create an account',
+              style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
+          : new Text('Have an account? Sign in',
+              style:
+                  new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+      onPressed: _formMode == FormMode.LOGIN
+          ? _changeFormToSignUp
+          : _changeFormToLogin,
+    );
+  }
+
+  // Helper functions for switching between login and account creation forms
+  void _changeFormToSignUp() {
+    _formKey.currentState.reset();
+    _errorMessage = "";
+    setState(() {
+      _formMode = FormMode.SIGNUP;
+    });
+  }
+
+  void _changeFormToLogin() {
+    _formKey.currentState.reset();
+    _errorMessage = "";
+    setState(() {
+      _formMode = FormMode.LOGIN;
+    });
+  }
+
+  // Validates and submits form data
+  void _validateAndSubmit() async {
+    setState(() {
+      _errorMessage = "";
+      _isLoading = true;
+    });
+    if (_validateAndSave()) {
+      String userId = "";
+      try {
+        if (_formMode == FormMode.LOGIN) {
+          userId = await widget.auth.signIn(_email, _password);
+          print('Signed in: $userId');
+        } else {
+          userId = await widget.auth.signUp(_email, _password);
+          widget.auth.sendEmailVerification();
+          _showVerifyEmailSentDialog();
+          print('Signed up user: $userId');
+        }
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (userId.length > 0 &&
+            userId != null &&
+            _formMode == FormMode.LOGIN) {
+          widget.onSignedIn();
+        }
+      } catch (e) {
+        print('Error: $e');
+        setState(() {
+          _isLoading = false;
+          if (_isIOS) {
+            _errorMessage = e.details;
+          } else
+            _errorMessage = e.message;
+        });
+      }
+    }
+  }
+
+  // Form validation used before submission
+  bool _validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  // Dialog displayed when creating a new account
+  void _showVerifyEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content:
+          new Text("Link to verify account has been sent to your email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                _changeFormToLogin();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Error display for authentication failures
+  Widget _showErrorMessage() {
+    if (_errorMessage != null && _errorMessage.length > 0) {
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.red,
+            height: 1.0,
+            fontWeight: FontWeight.w300),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
   }
 
   Widget _showBody() {
     return new Container(
         padding: EdgeInsets.all(16.0),
         child: new Form(
-          //key: _formKey,
+          key: _formKey,
           child: new ListView(
             shrinkWrap: true,
             children: <Widget>[
@@ -116,8 +277,8 @@ class _LoginPageState extends State<LoginPage> {
               _showEmailInput(),
               _showPasswordInput(),
               _showPrimaryButton(),
-              //_showSecondaryButton(),
-              //_showErrorMessage(),
+              _showSecondaryButton(),
+              _showErrorMessage(),
             ],
           ),
         ));

@@ -3,13 +3,12 @@ import 'package:EmergenSeek/util/animations.dart';
 import 'package:EmergenSeek/screens/nav_menu.dart';
 import 'package:EmergenSeek/screens/settings.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:EmergenSeek/models/sos_model.dart';
+import 'package:EmergenSeek/models/app_model.dart';
 
 // SOS Screen itself, contains an app bar and the SOS button
 class SOSPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         backgroundColor: Colors.blueGrey[400],
         drawer: NavMenu(),
@@ -34,12 +33,12 @@ class SOSPage extends StatelessWidget {
 class SOSButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<SOSModel>(
-        builder: (context, child, sos) => Column(
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                sos.getSOSStatus() == true
+                model.getSOSStatus() == true
                     ? ShowUp(
                         child: Text("S.O.S. Alert Broadcasted",
                             style: TextStyle(
@@ -57,12 +56,12 @@ class SOSButton extends StatelessWidget {
                         padding: EdgeInsets.all(15.0),
                         elevation: 10.0,
                         shape: new CircleBorder(),
-                        fillColor: sos.getSOSStatus() == false
+                        fillColor: model.getSOSStatus() == false
                             ? Colors.white
                             : Colors.black,
                         child: new Icon(
                           Icons.error_outline,
-                          color: sos.getSOSStatus() == false
+                          color: model.getSOSStatus() == false
                               ? Colors.blue[200]
                               : Colors.red,
                           size: 150.0,
@@ -77,7 +76,6 @@ class SOSButton extends StatelessWidget {
 }
 
 // The progress indicator for pressing and holding the SOS button
-// Updates the SOS model upon completion
 class ProgressRing extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -105,14 +103,15 @@ class _ProgressRingState extends State<ProgressRing>
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<SOSModel>(
-        builder: (context, child, sos) => GestureDetector(
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) => GestureDetector(
             onTapDown: (_) => controller.forward(),
             onTapUp: (_) {
               if (controller.status == AnimationStatus.forward) {
                 controller.reverse();
               } else if (controller.status == AnimationStatus.completed) {
-                sos.activateSOS();
+                // Updates the SOS model upon completion
+                model.activateSOS();
               }
             },
             child: Stack(
@@ -131,7 +130,7 @@ class _ProgressRingState extends State<ProgressRing>
                     child: CircularProgressIndicator(
                       value: controller.value,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          sos.getSOSStatus() == false
+                          model.getSOSStatus() == false
                               ? Colors.blue[200]
                               : Colors.red),
                     )),

@@ -1,6 +1,7 @@
 import 'package:scoped_model/scoped_model.dart';
 
-class SOSModel extends Model {
+// Model representing state data for the SOS feature
+mixin SOSModel on Model {
   bool _notifyUsers = false;
   bool _displayLockscreenInfo = true;
   bool _sosActive = false;

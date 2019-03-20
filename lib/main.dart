@@ -6,19 +6,21 @@ import 'package:EmergenSeek/screens/sos.dart';
 import 'package:EmergenSeek/screens/profile.dart';
 import 'package:EmergenSeek/screens/contacts.dart';
 import 'package:EmergenSeek/screens/about.dart';
-import 'package:EmergenSeek/models/sos_model.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:EmergenSeek/screens/login_page.dart';
+import 'package:EmergenSeek/services/auth.dart';
+import 'package:EmergenSeek/screens/root.dart';
+import 'package:EmergenSeek/models/app_model.dart';
 
 void main() {
-  final sos = SOSModel();
+  final app = AppModel(auth: new Auth());
 
   runApp(
-    ScopedModel<SOSModel>(
-      model: sos,
+    ScopedModel<AppModel>(
+      model: app,
       child: MyApp(),
     )
   );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
             title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic, color: Colors.white),
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.white),
           )),
-      home: LoginPage(),//HomePage(),
+      home: new RootPage(auth: new Auth()),//HomePage(),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => HomePage(),
         '/service_locator': (BuildContext context) => ServiceLocatorPage(),
