@@ -45,7 +45,8 @@ class NavMenu extends StatelessWidget {
                       leading: Icon(Icons.home),
                       title: Text("Home"),
                       onTap: () {
-                        Navigator.of(context).pushNamed('/home');
+                        // Pop current navigation stack until original home view is reached
+                        Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName));
                       }),
                   ListTile(
                       leading: Icon(Icons.room),

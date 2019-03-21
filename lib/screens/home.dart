@@ -28,9 +28,9 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
       // Set App Model attributes with values provided by root
-      if (widget.auth != null) {model.setAuth(widget.auth);}
-      if (widget.onSignedOut != null) model.setSignOut(widget.onSignedOut);
-      if (widget.userId != null) model.setUserId(widget.userId);
+      //if (widget.auth != null) {model.setAuth(widget.auth);}
+      //if (widget.onSignedOut != null) model.setSignOut(widget.onSignedOut);
+      //if (widget.userId != null) model.setUserId(widget.userId);
       return Scaffold(
         drawer: NavMenu(),
         appBar: AppBar(
@@ -47,7 +47,9 @@ class HomePageState extends State<HomePage> {
             IconButton(
               icon: Icon(Icons.exit_to_app),
               tooltip: 'Logout',
-              onPressed: model.signOut,
+              onPressed:
+                model.signOut,
+                //Navigator.of(context).pushNamedAndRemoveUntil('/login', ModalRoute.withName('/login'));
             ),
           ],
         ),

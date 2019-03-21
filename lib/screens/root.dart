@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:EmergenSeek/screens/login_page.dart';
 import 'package:EmergenSeek/services/auth.dart';
 import 'package:EmergenSeek/screens/home.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:EmergenSeek/models/app_model.dart';
 
 // Manager widget for directing the user to the appropriate page upon
 // logging in or out
@@ -67,28 +69,36 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    switch (authStatus) {
-      case AuthStatus.NOT_DETERMINED:
-        return _buildWaitingScreen();
-        break;
-      case AuthStatus.NOT_LOGGED_IN:
-        return new LoginPage(
-          auth: widget.auth,
-          onSignedIn: _onLoggedIn,
-        );
-        break;
-      case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
-          return new HomePage(
-            userId: _userId,
-            auth: widget.auth,
-            onSignedOut: _onSignedOut,
-          );
-        } else
+    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+      // Set app model attributes using root values
+      model.setAuth(widget.auth);
+      model.setSignOut(_onSignedOut);
+      model.setUserId(_userId);
+
+      // Route user to login or home page depending on authentication status
+      switch (authStatus) {
+        case AuthStatus.NOT_DETERMINED:
           return _buildWaitingScreen();
-        break;
-      default:
-        return _buildWaitingScreen();
-    }
+          break;
+        case AuthStatus.NOT_LOGGED_IN:
+          return new LoginPage(
+            auth: widget.auth,
+            onSignedIn: _onLoggedIn,
+          );
+          break;
+        case AuthStatus.LOGGED_IN:
+          if (_userId.length > 0 && _userId != null) {
+            return new HomePage(
+              userId: _userId,
+              auth: widget.auth,
+              onSignedOut: _onSignedOut,
+            );
+          } else
+            return _buildWaitingScreen();
+          break;
+        default:
+          return _buildWaitingScreen();
+      }
+    });
   }
 }

@@ -10,13 +10,12 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/auth.dart';
 import 'package:EmergenSeek/screens/root.dart';
 import 'package:EmergenSeek/models/app_model.dart';
+import 'package:EmergenSeek/screens/login_page.dart';
 
 void main() {
-  final app = AppModel(auth: new Auth());
-
   runApp(
     ScopedModel<AppModel>(
-      model: app,
+      model: AppModel(),
       child: MyApp(),
     )
   );
@@ -41,6 +40,8 @@ class MyApp extends StatelessWidget {
           )),
       home: new RootPage(auth: new Auth()),//HomePage(),
       routes: <String, WidgetBuilder> {
+        '/root': (BuildContext context) => RootPage(),
+        '/login': (BuildContext context) => LoginPage(),
         '/home': (BuildContext context) => HomePage(),
         '/service_locator': (BuildContext context) => ServiceLocatorPage(),
         '/location_updates': (BuildContext context) => LocationUpdatesPage(),

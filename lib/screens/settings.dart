@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:EmergenSeek/models/sos_model.dart';
+import 'package:EmergenSeek/models/app_model.dart';
 
 class SettingsHome extends StatelessWidget {
   @override
@@ -156,8 +156,8 @@ class SettingsSOSState extends State<SettingsSOS> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<SOSModel>(
-        builder: (context, child, sos) => Scaffold(
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) => Scaffold(
             backgroundColor: Theme.of(context).accentColor,
             appBar: AppBar(
               backgroundColor: Theme.of(context).primaryColor,
@@ -175,9 +175,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                           " the lockscreen after activating SOS mode",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: sos.getDisplayLockscreenInfo(),//values['displayInfo'],
+                      value: model.getDisplayLockscreenInfo(),//values['displayInfo'],
                       onChanged: (value) {
-                        sos.toggleDisplayLockscreenInfo();//onChanged('displayInfo');
+                        model.toggleDisplayLockscreenInfo();//onChanged('displayInfo');
                       },
                     ),
                     CheckboxListTile(
@@ -187,9 +187,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                           " of your SOS alerts",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: sos.getNotifyUsers(),//values['notifyUsers'],
+                      value: model.getNotifyUsers(),//values['notifyUsers'],
                       onChanged: (value) {
-                        sos.toggleNotifyUsers();//onChanged('notifyUsers');
+                        model.toggleNotifyUsers();//onChanged('notifyUsers');
                       },
                     ),
                   ],
