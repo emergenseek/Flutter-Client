@@ -1,4 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:EmergenSeek/services/api.dart';
 
 // Model representing state data for the SOS feature
 mixin SOSModel on Model {
@@ -20,6 +21,7 @@ mixin SOSModel on Model {
     _sosActive = true;
     // Inform [Model] to rebuild dependent widgets
     notifyListeners();
+    sendSMS();
   }
   void deactivateSOS() {
     _sosActive = false;

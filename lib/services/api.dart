@@ -1,36 +1,52 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Post> fetchPost() async {
-  final response =
-  await http.get('https://jsonplaceholder.typicode.com/posts/1');
+Future<Post> sendSMS() async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "user_id": "e78e0c86-f9ba-4375-9554-6dc1426f5605",
+    "type": 3,
+    "message": "Hello from Lambda, Simon"
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     return Post.fromJson(json.decode(response.body));
   } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
+    // If the call was not successful, notify user of error code
+    print("SendSMS request failed. Error Code: ${response.statusCode}");
   }
 }
 
 class Post {
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
+  final String userId;
+  final int type;
+  final String message;
 
-  Post({this.userId, this.id, this.title, this.body});
+  Post({this.userId, this.type, this.message});
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
+      type: json['type'],
+      message: json['message'],
     );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["userId"] = userId;
+    map["type"] = type;
+    map["message"] = message;
+
+    return map;
   }
 }
