@@ -45,7 +45,12 @@ class SOSButton extends StatelessWidget {
                                 fontSize: 25.0, fontWeight: FontWeight.w300)),
                         delay: 500,
                       )
-                    : Container(),
+                    : ShowUp(
+                        child: Text("Hold To Activate S.O.S.",
+                            style: TextStyle(
+                                fontSize: 25.0, fontWeight: FontWeight.w300)),
+                        delay: 500,
+                      ),
                 Padding(
                   padding: EdgeInsets.all(32.0),
                 ),
@@ -110,8 +115,12 @@ class _ProgressRingState extends State<ProgressRing>
               if (controller.status == AnimationStatus.forward) {
                 controller.reverse();
               } else if (controller.status == AnimationStatus.completed) {
-                // Updates the SOS model upon completion
-                model.activateSOS();
+                // Shows confirmation box on completion
+                if (model.getSOSStatus() == true) {
+                  model.deactivateSOS();
+                } else {
+                  showConfirmation();
+                }
               }
             },
             child: Stack(
@@ -136,5 +145,70 @@ class _ProgressRingState extends State<ProgressRing>
                     )),
               ],
             )));
+  }
+
+  void showConfirmation() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ScopedModelDescendant<AppModel>(
+              builder: (context, child, model) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    contentPadding: EdgeInsets.all(17.0),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Text(
+                          "Please select the alert severity",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 25.0),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            new FlatButton(
+                                onPressed: () {
+                                  model.setEmergencyTier("MILD");
+                                  model.activateSOS();
+                                  resetProgress();
+                                  Navigator.of(context).pop();
+                                },
+                                child: new Text(
+                                  "Mild",
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.tealAccent[400]),
+                                )),
+                            new FlatButton(
+                                onPressed: () {
+                                  model.setEmergencyTier("SEVERE");
+                                  model.activateSOS();
+                                  resetProgress();
+                                  Navigator.of(context).pop();
+                                },
+                                child: new Text(
+                                  "Severe",
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.red),
+                                )),
+                            new FlatButton(
+                                onPressed: () {
+                                  resetProgress();
+                                  Navigator.of(context).pop();
+                                },
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(fontSize: 16.0),
+                                )),
+                          ],
+                        )
+                      ],
+                    ),
+                  ));
+        });
   }
 }

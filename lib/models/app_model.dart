@@ -35,7 +35,6 @@ class AppModel extends Model with SOSModel {
     return userId;
   }
 
-  // TODO: Fix sign out only affecting bottom level home page
   signOut() async {
     try {
       await auth.signOut();

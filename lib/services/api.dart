@@ -9,9 +9,9 @@ Future<Post> sendSMS() async {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "e78e0c86-f9ba-4375-9554-6dc1426f5605",
+    "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
     "type": 3,
-    "message": "Hello from Lambda, Simon"
+    "message": "Hello from Lambda, Derek"
   });
 
   final response = await http.post(url, headers: headers, body: body);
@@ -22,7 +22,28 @@ Future<Post> sendSMS() async {
     return Post.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
-    print("SendSMS request failed. Error Code: ${response.statusCode}");
+    print("sendSMS request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Post> sendCall() async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return Post.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("sendCall request failed. Error Code: ${response.statusCode}");
   }
 }
 
