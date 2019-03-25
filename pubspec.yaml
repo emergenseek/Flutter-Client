@@ -16,9 +16,14 @@ dependencies:
   flutter:
     sdk: flutter
   scoped_model: ^1.0.1
-  # This is the latest version of firebase that will work with the application
+  # This is the latest version of Firebase that will work with the application
   # Later releases require migration to AndroidX
   firebase_auth: ^0.7.0
+  http: ^0.12.0+1
+  # Again, this is the latest version of the geolocator plugin that will work without AndroidX
+  geolocator: ^2.1.1
+  permission_handler: "2.1.2"
+  google_api_availability: "1.0.4"
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
