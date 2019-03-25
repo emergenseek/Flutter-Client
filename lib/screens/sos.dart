@@ -118,6 +118,7 @@ class _ProgressRingState extends State<ProgressRing>
                 // Shows confirmation box on completion
                 if (model.getSOSStatus() == true) {
                   model.deactivateSOS();
+                  resetProgress();
                 } else {
                   showConfirmation();
                 }

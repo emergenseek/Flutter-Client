@@ -1,5 +1,6 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/api.dart';
+import 'package:EmergenSeek/services/geolocator.dart';
 
 // Values representing the severity of the SOS alert
 enum EmergencyTier { MILD, SEVERE }
@@ -40,8 +41,11 @@ mixin SOSModel on Model {
     }
   }
 
-  void activateSOS() {
+  Future activateSOS() async {
     _sosActive = true;
+    Map currentLocation = await getCurrentLocation();
+    print("Latitude: " + currentLocation["latitude"].toString());
+    print("Longitude: " + currentLocation["longitude"].toString());
 
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
       sendCall();
