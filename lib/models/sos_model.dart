@@ -43,15 +43,13 @@ mixin SOSModel on Model {
 
   Future activateSOS() async {
     _sosActive = true;
-    Map currentLocation = await getCurrentLocation();
-    print("Latitude: " + currentLocation["latitude"].toString());
-    print("Longitude: " + currentLocation["longitude"].toString());
+    List coordinates = await getCurrentLocation();
 
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
-      sendCall();
+      sendCall(coordinates);
     }
     if(_sendTexts == true){
-      sendSMS();
+      sendSMS(coordinates);
     }
 
     // Inform [Model] to rebuild dependent widgets
