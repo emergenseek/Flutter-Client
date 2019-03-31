@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<Post> sendSMS() async {
+Future<Post> sendSMS(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
@@ -11,7 +11,8 @@ Future<Post> sendSMS() async {
   var body = jsonEncode({
     "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
     "type": 3,
-    "message": "Hello from Lambda, Derek"
+    "message": "This is an SOS Emergency Alert from EmergenSeek",
+    "last_known_location": coordinates,
   });
 
   final response = await http.post(url, headers: headers, body: body);
@@ -26,13 +27,14 @@ Future<Post> sendSMS() async {
   }
 }
 
-Future<Post> sendCall() async {
+Future<Post> sendCall(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
     "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
+    "last_known_location": coordinates
   });
 
   final response = await http.post(url, headers: headers, body: body);
@@ -51,14 +53,16 @@ class Post {
   final String userId;
   final int type;
   final String message;
+  final List<double> last_known_location;
 
-  Post({this.userId, this.type, this.message});
+  Post({this.userId, this.type, this.message, this.last_known_location});
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       userId: json['userId'],
       type: json['type'],
       message: json['message'],
+      last_known_location: json['last_known_location'],
     );
   }
 
@@ -67,6 +71,7 @@ class Post {
     map["userId"] = userId;
     map["type"] = type;
     map["message"] = message;
+    map["last_known_location"] = last_known_location;
 
     return map;
   }
