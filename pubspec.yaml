@@ -19,6 +19,11 @@ dependencies:
   http: ^0.12.0+1
   permission_handler: "2.1.2"
   google_api_availability: "1.0.4"
+  # To be able to use Google Map Package
+  google_maps_flutter: 
+    git:
+      url: git://github.com/flutter/plugins
+      path: packages/google_maps_flutter
   # The used version of the below plugins are the latest releases that are compatible without AndroidX
   # Later releases require migration to AndroidX
   firebase_auth: ^0.7.0
@@ -33,7 +38,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
