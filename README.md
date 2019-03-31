@@ -13,6 +13,7 @@ Trello Board: https://trello.com/b/D9rcz38x/mobile-client
 - [geolocator library (v2.1.1)](https://pub.dartlang.org/packages/geolocator#-installing-tab-)
 - [firebase_auth (v0.7.0)](https://pub.dartlang.org/packages/firebase_auth#-installing-tab-)
 - [contacts_service (v0.9.0)](https://pub.dartlang.org/packages/contacts_service#-installing-tab-)
+- [google_maps_flutter](https://pub.dartlang.org/packages/google_maps_flutter#-installing-tab-)
 
 ## Project Structure
 - `/models`

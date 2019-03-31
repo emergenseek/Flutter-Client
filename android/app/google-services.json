@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "168396609775",
+    "firebase_url": "https://emergenseek-7e83e.firebaseio.com",
+    "project_id": "emergenseek-7e83e",
+    "storage_bucket": "emergenseek-7e83e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168396609775:android:f7afa3dea342b2ba",
+        "android_client_info": {
+          "package_name": "com.emergenseek.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168396609775-si90h6pql6aq2mlqr5pvfurc1i7p40ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_25brzAdzFcTH4imLcvRiAB8yzY0N5wA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

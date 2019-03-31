@@ -1,5 +1,5 @@
-name: flutter_app
-description: A new Flutter application.
+name: EmergenSeek
+description: The Flutter client for the EmergenSeek platform.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,6 +15,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  scoped_model: ^1.0.1
+  http: ^0.12.0+1
+  permission_handler: "2.1.2"
+  google_api_availability: "1.0.4"
+  # To be able to use Google Map Package
+  google_maps_flutter: 
+    git:
+      url: git://github.com/flutter/plugins
+      path: packages/google_maps_flutter
+  # The used version of the below plugins are the latest releases that are compatible without AndroidX
+  # Later releases require migration to AndroidX
+  firebase_auth: ^0.7.0
+  geolocator: ^2.1.1
+  contacts_service: ^0.0.9
+  flutter_local_notifications: ^0.4.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -23,7 +38,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
