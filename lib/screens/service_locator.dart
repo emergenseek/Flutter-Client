@@ -44,7 +44,7 @@ class _ServiceLocatorPageState extends State<ServiceLocatorPage> {
   }
 }
 
-// Goole Map Controller for zoom_in function
+// Google Map Controller for zoom_in function
 Completer<GoogleMapController> _controller = Completer();
 Widget googleMap(BuildContext context) {
     return Container(
@@ -59,10 +59,10 @@ Widget googleMap(BuildContext context) {
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },
-          markers: {
+          /*markers: {
             // TO DO: SELECTED_MarkerID such as pharmacy, hospital
             pharmacyMarker, hospitalMarker
-          },
+          },*/
         ));
   }
 

@@ -9,7 +9,7 @@ enum EmergencyTier { MILD, SEVERE }
 // Model representing state data for the SOS feature
 mixin SOSModel on Model {
   bool _notifyUsers = false;
-  bool _displayLockscreenInfo = true;
+  bool _showLockscreenInfo = true;
   bool _sosActive = false;
   bool _sendTexts = true;
   bool _sendCalls = true;
@@ -23,7 +23,7 @@ mixin SOSModel on Model {
     return _notifyUsers;
   }
   bool getDisplayLockscreenInfo() {
-    return _displayLockscreenInfo;
+    return _showLockscreenInfo;
   }
   bool getSendTexts() {
     return _sendTexts;
@@ -59,7 +59,7 @@ mixin SOSModel on Model {
     }
 
     // Display personal info as a notification if user has enabled it
-    if(_displayLockscreenInfo == true){
+    if(_showLockscreenInfo == true){
       displayInfo();
     }
     // Inform [Model] to rebuild dependent widgets
@@ -85,7 +85,7 @@ mixin SOSModel on Model {
   }
 
   void toggleDisplayLockscreenInfo() {
-    _displayLockscreenInfo = !_displayLockscreenInfo;
+    _showLockscreenInfo = !_showLockscreenInfo;
     notifyListeners();
   }
 
