@@ -58,27 +58,42 @@ mixin SOSModel on Model {
       sendSMS(coordinates);
     }
 
+    // Display personal info as a notification if user has enabled it
+    if(_displayLockscreenInfo == true){
+      displayInfo();
+    }
     // Inform [Model] to rebuild dependent widgets
     notifyListeners();
   }
+
   void deactivateSOS() {
     _sosActive = false;
     _notifications.cancelNotification();
+
     // Inform [Model] to rebuild dependent widgets
     notifyListeners();
   }
+
+  Future displayInfo() async {
+    var info = await getLockscreenInfo();
+    _notifications.displayLockscreenNotification(info.first_name, info.last_name, info.blood_type, info.age);
+  }
+
   void toggleNotifyUsers() {
     _notifyUsers = !_notifyUsers;
     notifyListeners();
   }
+
   void toggleDisplayLockscreenInfo() {
     _displayLockscreenInfo = !_displayLockscreenInfo;
     notifyListeners();
   }
+
   void toggleSendTexts(){
     _sendTexts = !_sendTexts;
     notifyListeners();
   }
+
   void toggleSendCalls(){
     _sendCalls = !_sendCalls;
     notifyListeners();
