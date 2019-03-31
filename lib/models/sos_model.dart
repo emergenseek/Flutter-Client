@@ -52,10 +52,10 @@ mixin SOSModel on Model {
 
     // Send API requests according to severity
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
-      //sendCall(coordinates);
+      sendCall(coordinates);
     }
     if(_sendTexts == true){
-      //sendSMS(coordinates);
+      sendSMS(coordinates);
     }
 
     // Inform [Model] to rebuild dependent widgets
