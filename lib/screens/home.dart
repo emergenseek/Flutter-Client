@@ -27,10 +27,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-      // Set App Model attributes with values provided by root
-      //if (widget.auth != null) {model.setAuth(widget.auth);}
-      //if (widget.onSignedOut != null) model.setSignOut(widget.onSignedOut);
-      //if (widget.userId != null) model.setUserId(widget.userId);
       return Scaffold(
         drawer: NavMenu(),
         appBar: AppBar(

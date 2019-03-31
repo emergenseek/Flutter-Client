@@ -1,6 +1,7 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/api.dart';
 import 'package:EmergenSeek/services/geolocator.dart';
+import 'package:EmergenSeek/services/notifications.dart';
 
 // Values representing the severity of the SOS alert
 enum EmergencyTier { MILD, SEVERE }
@@ -13,6 +14,7 @@ mixin SOSModel on Model {
   bool _sendTexts = true;
   bool _sendCalls = true;
   EmergencyTier _emergencyTier = EmergencyTier.MILD;
+  Notifications _notifications = new Notifications();
 
   bool getSOSStatus() {
     return _sosActive;
@@ -45,11 +47,15 @@ mixin SOSModel on Model {
     _sosActive = true;
     List coordinates = await getCurrentLocation();
 
+    // Display local notification
+    _notifications.displaySOSNotification();
+
+    // Send API requests according to severity
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
-      sendCall(coordinates);
+      //sendCall(coordinates);
     }
     if(_sendTexts == true){
-      sendSMS(coordinates);
+      //sendSMS(coordinates);
     }
 
     // Inform [Model] to rebuild dependent widgets
@@ -57,6 +63,7 @@ mixin SOSModel on Model {
   }
   void deactivateSOS() {
     _sosActive = false;
+    _notifications.cancelNotification();
     // Inform [Model] to rebuild dependent widgets
     notifyListeners();
   }

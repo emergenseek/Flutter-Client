@@ -11,7 +11,7 @@ Future<Post> sendSMS(List coordinates) async {
   var body = jsonEncode({
     "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
     "type": 3,
-    "message": "Hello from Lambda, Derek",
+    "message": "This is an SOS Emergency Alert from EmergenSeek",
     "last_known_location": coordinates,
   });
 
