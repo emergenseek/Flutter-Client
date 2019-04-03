@@ -17,7 +17,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   Completer<GoogleMapController> _controller = Completer();
 
   // ?options current location
-  bool mapToggle = false;
+  bool locationToggle = false;
   var currentLocation;
   // getCurrentLocation set var currentLocation
   @override
@@ -28,126 +28,27 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         .then((currLocation) {
       setState(() {
         this.currentLocation = currLocation;
-        this.mapToggle = true;
+        this.locationToggle = true;
       });
     });
   }
 
-  // ?options store-hour
-  bool open = true;
-  // box - details
+  // _searching() for box-details
   String name = 'name';
   String icon = 'icon';
   double lat;
   double lng;
+  // ?options store-hour
+  bool open = true;
 
   // _searching() return 'name' 'open'
-  _searching(String name, String icon, double lat, double lng, bool open) {}
-
-  // The screen itself with appbar, googleMap, and floating SOS
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        backgroundColor: Colors.blueGrey[400],
-        drawer: NavMenu(),
-        appBar: AppBar(
-          title: Text("Service Locator"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.settings),
-              tooltip: 'Settings',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SettingsServiceLocator()));
-              },
-            )
-          ],
-        ),
-        body: Stack(
-          // Stack over the full-screen
-          children: <Widget>[
-            _googleMap(),
-            _buildContainer(),
-          ],
-        ),
-        floatingActionButton: QuickSOS());
-  }
-
-  // The Google Map and Marker, using var currentlocation
-  Widget _googleMap() {
-    // for loop, search and return 'location'
-    // var marker = new _searching(name, icon, lat, lng, open);
-    Marker mMarker = Marker(
-      markerId: MarkerId('mMarker'),
-      position: LatLng(33.5897, -101.8560), // (marker.lat, marker.lng)
-      infoWindow: InfoWindow(title: name), // marker.name
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    );
-
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: mapToggle
-            ? GoogleMap(
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                compassEnabled: true,
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                        currentLocation.latitude, currentLocation.longitude),
-                    zoom: 13.5),
-                // Define Google Map Controller with controller
-                onMapCreated: (mapController) {
-                  _controller.complete(mapController);
-                },
-                markers: {mMarker},
-              )
-            : Center(
-                // Alternative option, if searching or cant find currentLocation
-                child: Text(
-                'Loading.. Please wait..',
-                style: TextStyle(fontSize: 20.0),
-              )));
-  }
-
-  // The bottom full-boxes with ALIGN. and LISTVIEW, fitted-boxes
-  Widget _buildContainer() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.0),
-          height: 150.0,
-          child: mapToggle
-              ? ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: resultBox(icon, lat, lng),
-                    ),
-                  ],
-                )
-              : Center(
-                  // Alternative option, if searching or cant find currentLocation
-                  // NULL
-                  )),
-    );
-  }
-
-  // Navigating MARKER long/lat to relocate with BOXES && vs
-  Future<void> goToLocation(double lat, double lng) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat, lng),
-      zoom: 15,
-      tilt: 50.0,
-      bearing: 45.0,
-    )));
+  void _searching(String name, String icon, double lat, double lng, bool open) {
+    this.name = name;
+    this.icon = icon;
+    this.lat = lat;
+    this.lng = lng;
+    this.open = open;
+    // ... Search Future<void> Future<void>
   }
 
   Widget myDetailsContainer(String name, bool open) {
@@ -185,7 +86,18 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                 ]),
           )
         ]);
-  }
+  } // End of Location details
+
+// Navigating MARKER long/lat to relocate with BOXES && vs
+  Future<void> goToLocation(double lat, double lng) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(lat, lng),
+      zoom: 15,
+      tilt: 50.0,
+      bearing: 45.0,
+    )));
+  } // End of goToLocation effects
 
   Widget resultBox(String icon, double lat, double lng) {
     // var location = new _searching(name, icon, lat, lng, open);
@@ -224,6 +136,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: myDetailsContainer(name, open),
+                      // Maybe // details.name or location.open
                     ),
                   )
                 ],
@@ -231,5 +144,91 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ),
       ),
     );
-  }
+  } // End of Right Side box and location () 
+
+  // The Google Map and Marker, using var currentlocation
+  Widget _googleMap() {
+    // for loop, search and return 'location'
+    // var marker = new _searching(name, icon, lat, lng, open);
+    Marker mMarker = Marker(
+      markerId: MarkerId('mMarker'),
+      position: LatLng(33.5897, -101.8560), // (marker.lat, marker.lng)
+      infoWindow: InfoWindow(title: name), // marker.name
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: GoogleMap(
+          mapType: MapType.normal,
+          myLocationEnabled: true,
+          compassEnabled: true,
+          initialCameraPosition: CameraPosition(
+              target:
+                  LatLng(currentLocation.latitude, currentLocation.longitude),
+              zoom: 13.5),
+          // Define Google Map Controller with controller
+          onMapCreated: (mapController) {
+            _controller.complete(mapController);
+          },
+          markers: {mMarker},
+        ));
+  } // End of map and marker ()
+
+  // The bottom full-boxes with ALIGN. and LISTVIEW, fitted-boxes
+  Widget _buildContainer() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Container(
+          margin: EdgeInsets.symmetric(vertical: 20.0),
+          height: 150.0,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              SizedBox(
+                width: 10.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: resultBox(icon, lat, lng),
+              ),
+            ],
+          )),
+    );
+  } // End of bottom container ()
+
+  // The screen itself with appbar, googleMap, and floating SOS
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        backgroundColor: Colors.blueGrey[400],
+        drawer: NavMenu(),
+        appBar: AppBar(
+          title: Text("Service Locator"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              tooltip: 'Settings',
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SettingsServiceLocator()));
+              },
+            )
+          ],
+        ),
+        body: locationToggle
+            ? Stack(
+                // Stack over the full-screen
+                children: <Widget>[_googleMap(), _buildContainer()])
+            : Center(
+                // Alternative option, if searching or cant find currentLocation
+                child: Text(
+                'Loading.. Please wait..',
+                style: TextStyle(fontSize: 20.0),
+              )),
+        floatingActionButton: QuickSOS());
+  } // End Of build()
+
 }
