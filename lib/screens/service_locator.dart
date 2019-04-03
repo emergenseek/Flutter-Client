@@ -12,20 +12,23 @@ class ServiceLocatorPage extends StatefulWidget {
 }
 
 class ServiceLocatorPageState extends State<ServiceLocatorPage> {
+  // GoogleMapController for onMapCreated
+  GoogleMapController mapController;
+  Completer<GoogleMapController> _controller = Completer();
+  
   // ?options current location
   bool mapToggle = false;
   var currentLocation;
-  // Google Map Controller for onMapCreated
-  GoogleMapController mapController;
-  Completer<GoogleMapController> _controller = Completer();
-
+  // getCurrentLocation set var currentLocation
   @override
   void initState() {
     super.initState();
-    Geolocator().getCurrentPosition().then((currLocation) {
+    Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((currLocation) {
       setState(() {
-        currentLocation = currLocation;
-        mapToggle = true;
+        this.currentLocation = currLocation;
+        this.mapToggle = true;
       });
     });
   }
@@ -75,39 +78,37 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
                         currentLocation.latitude, currentLocation.longitude),
-                    zoom: 12),
-                //Define Google Map Controller with controller
+                    zoom: 13.5),
+                // Define Google Map Controller with controller
                 onMapCreated: (mapController) {
                   _controller.complete(mapController);
                 })
             : Center(
+                // Alternative option, if searching or cant find currentLocation
                 child: Text(
                 'Loading.. Please wait..',
                 style: TextStyle(fontSize: 20.0),
-              )));  
+              )));
   }
 
-  Marker pharmacyMarker = Marker(
-    markerId: MarkerId('pharmacy'),
-    position: LatLng(33.5897, -101.8560),
-    infoWindow: InfoWindow(title: 'Pharmacy'),
-    icon: BitmapDescriptor.defaultMarkerWithHue(
-      BitmapDescriptor.hueBlue,
-    ),
-  );
+  // Marker pharmacyMarker = Marker(
+  //   markerId: MarkerId('pharmacy'),
+  //   position: LatLng(33.5897, -101.8560),
+  //   infoWindow: InfoWindow(title: 'Pharmacy'),
+  //   icon: BitmapDescriptor.defaultMarkerWithHue(
+  //     BitmapDescriptor.hueBlue,
+  //   ),
+  // );
 
-// Navigating MARKER long/lat to relocate with BOXES && vs
-  Future<void> goToLocation(double lat, double long) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat, long),
-      zoom: 15,
-      tilt: 50.0,
-      bearing: 45.0,
-    )));
-  }
+  // ?options store-hour
+  bool open = true;
+  // box - details
+  String name = 'name';
+  String icon = 'icon';
+  double lat;
+  double lng;
 
-// The bottom full-boxes with ALIGN. and LISTVIEW, fitted-boxes
+  // The bottom full-boxes with ALIGN. and LISTVIEW, fitted-boxes
   Widget _buildContainer() {
     return Align(
       alignment: Alignment.bottomLeft,
@@ -123,58 +124,38 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: boxes( //put info in here
-                          "https://i.ibb.co/z8CgfZy/453947-walgreens-photo.jpg",
-                          33.5897,
-                          -101.8560,
-                          "Pharmacy"),
+                      child: resultBox(icon, lat, lng),
                     ),
                   ],
                 )
-              : Center()),
+              : Center(
+                  // Alternative option, if searching or cant find currentLocation
+                  // NULL
+                  )),
     );
   }
 
-  Widget boxes(String _image, double lat, double long, String locationName) {
-    return GestureDetector(
-      onTap: () {
-        goToLocation(lat, long);
-      },
-      child: Container(
-        child: new FittedBox(
-          child: Material(
-              color: Colors.white,
-              elevation: 14.0,
-              borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Color(0x802196F3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    width: 180,
-                    height: 200,
-                    child: ClipRRect(
-                      borderRadius: new BorderRadius.circular(24.0),
-                      child: Image(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(_image),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: myDetailsContainer(locationName),
-                    ),
-                  )
-                ],
-              )),
-        ),
-      ),
-    );
+  // Navigating MARKER long/lat to relocate with BOXES && vs
+  Future<void> goToLocation(double lat, double lng) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(lat, lng),
+      zoom: 15,
+      tilt: 50.0,
+      bearing: 45.0,
+    )));
   }
 
-  Widget myDetailsContainer(String locationName) {
+  // _searching() return 'name' 'open'
+  _searching(String name, bool open) {
+
+  }
+
+  Widget myDetailsContainer(String name, bool open) {
+    // Searching return 'name' and 'open' hours
+    // var searching = new _searching(name, open);
+    this.name = name; // searching.
+    this.open = open;
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -182,7 +163,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
                 child: Text(
-              locationName,
+              name,
               style: TextStyle(
                   color: Color(0xff6200ee),
                   fontSize: 24.0,
@@ -195,12 +176,67 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
-                    child: Text("Details: ... ",
-                        style:
-                            TextStyle(color: Colors.black54, fontSize: 18.0)),
-                  )
+                      // option, if searching or cant find currentLocation
+                      child: open
+                          ? Text('open',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 18.0))
+                          : Text('closed',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 18.0)))
                 ]),
           )
         ]);
+  }
+
+  // _location() return 'icon' 'location'
+  _location(String icon, double lat, double lng) {
+
+  }
+
+  Widget resultBox(String icon, double lat, double lng) {
+    // Searching return 'icon' and 'location'
+    // var location = new _location(icon, lat, lng);
+    this.icon = icon; // location.
+    this.lat = lat;
+    this.lng = lng;
+    return GestureDetector(
+      onTap: () {
+        goToLocation(33.5897, -101.8560); // Testing (lat. lng)
+      },
+      child: Container(
+        child: new FittedBox(
+          child: Material(
+              color: Colors.white,
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Image-Icon on the left, fittedBox
+                  Container(
+                    width: 180,
+                    height: 200,
+                    child: ClipRRect(
+                      borderRadius: new BorderRadius.circular(24.0),
+                      child: Image(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(icon),
+                      ),
+                    ),
+                  ),
+                  // Details on the right with other (), fittedBox
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: myDetailsContainer(name, open),
+                    ),
+                  )
+                ],
+              )),
+        ),
+      ),
+    );
   }
 }
