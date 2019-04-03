@@ -15,7 +15,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   // GoogleMapController for onMapCreated
   GoogleMapController mapController;
   Completer<GoogleMapController> _controller = Completer();
-  
+
   // ?options current location
   bool mapToggle = false;
   var currentLocation;
@@ -32,6 +32,17 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
       });
     });
   }
+
+  // ?options store-hour
+  bool open = true;
+  // box - details
+  String name = 'name';
+  String icon = 'icon';
+  double lat;
+  double lng;
+
+  // _searching() return 'name' 'open'
+  _searching(String name, String icon, double lat, double lng, bool open) {}
 
   // The screen itself with appbar, googleMap, and floating SOS
   @override
@@ -59,14 +70,22 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
           children: <Widget>[
             _googleMap(),
             _buildContainer(),
-            //_makeMaker(),
           ],
         ),
         floatingActionButton: QuickSOS());
   }
 
-  // The Google Map itself, using var currentlocation
+  // The Google Map and Marker, using var currentlocation
   Widget _googleMap() {
+    // for loop, search and return 'location'
+    // var marker = new _searching(name, icon, lat, lng, open);
+    Marker mMarker = Marker(
+      markerId: MarkerId('mMarker'),
+      position: LatLng(33.5897, -101.8560), // (marker.lat, marker.lng)
+      infoWindow: InfoWindow(title: name), // marker.name
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
+
     return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -82,7 +101,9 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                 // Define Google Map Controller with controller
                 onMapCreated: (mapController) {
                   _controller.complete(mapController);
-                })
+                },
+                markers: {mMarker},
+              )
             : Center(
                 // Alternative option, if searching or cant find currentLocation
                 child: Text(
@@ -90,23 +111,6 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
                 style: TextStyle(fontSize: 20.0),
               )));
   }
-
-  // Marker pharmacyMarker = Marker(
-  //   markerId: MarkerId('pharmacy'),
-  //   position: LatLng(33.5897, -101.8560),
-  //   infoWindow: InfoWindow(title: 'Pharmacy'),
-  //   icon: BitmapDescriptor.defaultMarkerWithHue(
-  //     BitmapDescriptor.hueBlue,
-  //   ),
-  // );
-
-  // ?options store-hour
-  bool open = true;
-  // box - details
-  String name = 'name';
-  String icon = 'icon';
-  double lat;
-  double lng;
 
   // The bottom full-boxes with ALIGN. and LISTVIEW, fitted-boxes
   Widget _buildContainer() {
@@ -146,16 +150,10 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
     )));
   }
 
-  // _searching() return 'name' 'open'
-  _searching(String name, bool open) {
-
-  }
-
   Widget myDetailsContainer(String name, bool open) {
-    // Searching return 'name' and 'open' hours
-    // var searching = new _searching(name, open);
-    this.name = name; // searching.
-    this.open = open;
+    // var details = new _searching(name, icon, lat, lng, open);
+    this.name = name; // details.name
+    this.open = open; // details.open
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -189,20 +187,15 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ]);
   }
 
-  // _location() return 'icon' 'location'
-  _location(String icon, double lat, double lng) {
-
-  }
-
   Widget resultBox(String icon, double lat, double lng) {
-    // Searching return 'icon' and 'location'
-    // var location = new _location(icon, lat, lng);
-    this.icon = icon; // location.
-    this.lat = lat;
-    this.lng = lng;
+    // var location = new _searching(name, icon, lat, lng, open);
+    this.icon = icon; // location.icon
+    this.lat = lat; // location.lat
+    this.lng = lng; // location.lng
     return GestureDetector(
       onTap: () {
-        goToLocation(33.5897, -101.8560); // Testing (lat. lng)
+        goToLocation(
+            33.5897, -101.8560); // Testing (location.lat, location.lng)
       },
       child: Container(
         child: new FittedBox(
