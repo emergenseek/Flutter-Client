@@ -16,7 +16,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   GoogleMapController mapController;
   Completer<GoogleMapController> _controller = Completer();
 
-  // ?options current location
+  // ?options for body: only run when there is currentLocation located
   bool locationToggle = false;
   var currentLocation;
   // getCurrentLocation set var currentLocation
@@ -33,7 +33,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
     });
   }
 
-  // _searching() for box-details
+  // searchResults() for box-details
   String name = 'name';
   String icon = 'icon';
   double lat;
@@ -41,18 +41,24 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   // ?options store-hour
   bool open = true;
 
-  // _searching() return 'name' 'open'
-  void _searching(String name, String icon, double lat, double lng, bool open) {
-    this.name = name;
-    this.icon = icon;
-    this.lat = lat;
-    this.lng = lng;
-    this.open = open;
-    // ... Search Future<void> Future<void>
-  }
+  // List _resultList = new List();
+  // // searchResults() return 'name' 'open'
+  // void searchResults(String name, String icon, double lat, double lng, bool open) {
+  //   this.name = name;
+  //   this.icon = icon;
+  //   this.lat = lat;
+  //   this.lng = lng;
+  //   this.open = open;
+  //   if (locationToggle) {
+  //     for (int i = 0; i<_resultList.length; i++) {
+  //       String data = _resultList[i];
+  //     }
+  //   }
+  //   // ... Search Future<void> Future<void>
+  // }
 
   Widget myDetailsContainer(String name, bool open) {
-    // var details = new _searching(name, icon, lat, lng, open);
+    // var details = new searchResults(name, icon, lat, lng, open);
     this.name = name; // details.name
     this.open = open; // details.open
     return Column(
@@ -100,7 +106,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   } // End of goToLocation effects
 
   Widget resultBox(String icon, double lat, double lng) {
-    // var location = new _searching(name, icon, lat, lng, open);
+    // var location = new searchResults(name, icon, lat, lng, open);
     this.icon = icon; // location.icon
     this.lat = lat; // location.lat
     this.lng = lng; // location.lng
@@ -149,7 +155,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   // The Google Map and Marker, using var currentlocation
   Widget _googleMap() {
     // for loop, search and return 'location'
-    // var marker = new _searching(name, icon, lat, lng, open);
+    // var marker = new searchResults(name, icon, lat, lng, open);
     Marker mMarker = Marker(
       markerId: MarkerId('mMarker'),
       position: LatLng(33.5897, -101.8560), // (marker.lat, marker.lng)
@@ -167,7 +173,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
               target:
                   LatLng(currentLocation.latitude, currentLocation.longitude),
               zoom: 13.5),
-          // Define Google Map Controller with controller
+          // Define Google Map Controller for goToController()
           onMapCreated: (mapController) {
             _controller.complete(mapController);
           },
@@ -230,5 +236,4 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
               )),
         floatingActionButton: QuickSOS());
   } // End Of build()
-
-}
+} // End of class ServiceLocatorPageState
