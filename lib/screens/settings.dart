@@ -144,6 +144,8 @@ class SettingsSOS extends StatefulWidget {
 
 class SettingsSOSState extends State<SettingsSOS> {
   Map<String, bool> values = {
+    'sendTexts': true,
+    'sendCalls': true,
     'displayInfo': false,
     'notifyUsers': false,
   };
@@ -168,6 +170,30 @@ class SettingsSOSState extends State<SettingsSOS> {
                 iconColor: Colors.blue[200],
                 child: ListView(
                   children: <Widget>[
+                    CheckboxListTile(
+                      title: Text("Send Automated Texts"),
+                      subtitle: Text(
+                          "Enable sending automated texts to contacts"
+                              " when broadcasting mild or severe SOS alerts",
+                          style: TextStyle(fontSize: 11.0)),
+                      activeColor: Colors.blue[200],
+                      value: model.getSendTexts(),//values['displayInfo'],
+                      onChanged: (value) {
+                        model.toggleSendTexts();//onChanged('displayInfo');
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text("Send Automated Calls"),
+                      subtitle: Text(
+                          "Enable sendign automated calls to contacts"
+                              " when broadcasting severe SOS alerts",
+                          style: TextStyle(fontSize: 11.0)),
+                      activeColor: Colors.blue[200],
+                      value: model.getSendCalls(),//values['displayInfo'],
+                      onChanged: (value) {
+                        model.toggleSendCalls();//onChanged('displayInfo');
+                      },
+                    ),
                     CheckboxListTile(
                       title: Text("Display Lockscreen Info"),
                       subtitle: Text(
