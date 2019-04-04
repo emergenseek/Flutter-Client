@@ -138,3 +138,59 @@ class LockscreenInfo {
     return map;
   }
 }
+
+Future<List<Detail>> callLocator() async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "current_location": [-31.9517231, 115.8603252] 
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("callLocator request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+// main(List<String> arguments) async {
+//   var response = await callLocator();
+//   for (var i = 0; i < response.length; i++)  {
+//     print(response[i].location["lat"]);
+//     print(response[i].location["lng"]);
+//     print(response[i].name);
+//     print(response[i].icon);
+//     print(response[i].open);
+//   }
+// }
+
+List<Detail> fromJson(List<dynamic> jsonList) {
+  List<Detail> data = new List<Detail>();
+  for (var i = 0; i < jsonList.length; i++)  {
+    data.add(
+      Detail.fromJson(jsonList[i])
+    );
+  }
+  return data;
+}
+
+class Detail {
+  final Map<String, double> location;
+  final String name;
+  final String icon;
+  final bool open;
+
+  const Detail({this.location, this.name, this.icon, this.open});
+
+  Detail.fromJson(Map jsonMap)
+    : location = jsonMap['location'].cast<String, double>(),
+      name = jsonMap['name'],
+      icon = jsonMap['icon'],
+      open = jsonMap['open'];
+}

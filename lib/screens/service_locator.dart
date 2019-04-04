@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:EmergenSeek/screens/nav_menu.dart';
 import 'package:EmergenSeek/screens/sos_quick_button.dart';
 import 'package:EmergenSeek/screens/settings.dart';
+import 'package:EmergenSeek/services/api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -94,22 +95,23 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ]);
   } // End of Location details
 
-// Navigating MARKER long/lat to relocate with BOXES && vs
-  Future<void> goToLocation(double lat, double lng) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat, lng),
-      zoom: 15,
-      tilt: 50.0,
-      bearing: 45.0,
-    )));
-  } // End of goToLocation effects
-
   Widget resultBox(String icon, double lat, double lng) {
     // var location = new searchResults(name, icon, lat, lng, open);
     this.icon = icon; // location.icon
     this.lat = lat; // location.lat
     this.lng = lng; // location.lng
+    
+    // Navigating MARKER long/lat to relocate with BOXES && vs
+    Future<void> goToLocation(double lat, double lng) async {
+      final GoogleMapController controller = await _controller.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(lat, lng),
+        zoom: 15,
+        tilt: 50.0,
+        bearing: 45.0,
+      )));
+    } // End of goToLocation effects
+
     return GestureDetector(
       onTap: () {
         goToLocation(
@@ -150,18 +152,33 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ),
       ),
     );
-  } // End of Right Side box and location () 
+  } // End of Right Side box and location ()
 
   // The Google Map and Marker, using var currentlocation
   Widget _googleMap() {
     // for loop, search and return 'location'
-    // var marker = new searchResults(name, icon, lat, lng, open);
-    Marker mMarker = Marker(
-      markerId: MarkerId('mMarker'),
-      position: LatLng(33.5897, -101.8560), // (marker.lat, marker.lng)
-      infoWindow: InfoWindow(title: name), // marker.name
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    );
+    Set<Marker> markers = Set<Marker>();
+    callLocator().then((response) {
+      for (var i = 0; i < response.length; i++) {
+        markers.add(Marker(
+          markerId: MarkerId(response[i].name),
+          position:
+              LatLng(response[i].location['lat'], response[i].location['lng']),
+          infoWindow: InfoWindow(title: response[i].name),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        ));
+      }
+    });
+
+    //print(markers);
+
+    // Marker mMarker = Marker(
+    //   markerId: MarkerId('mMarker'),
+    //   position: LatLng(33.5897, -101.8560),
+    //   infoWindow: InfoWindow(title: name),
+    //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    // );
+
     return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -177,7 +194,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
           onMapCreated: (mapController) {
             _controller.complete(mapController);
           },
-          markers: {mMarker},
+          markers: markers,
         ));
   } // End of map and marker ()
 
