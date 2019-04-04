@@ -6,8 +6,10 @@ mixin lupdatesModel on Model{
   bool _secondaryContacts = false;
   bool _tertiaryContacts = false;
 
-  bool sendUpdate(){
-    return _sendUpdate;
+  Future sendUpdate() async{
+    _sendUpdate = true;
+    //List coordinates = await getCurrentLocation();
+    //sendUpdateSMS(coordinates);
   }
 
   bool getPrimaryContacts(){
