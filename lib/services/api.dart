@@ -166,7 +166,6 @@ Future<void> callLocator(List<Detail> data) async {
 //     print(response[i].location["lat"]);
 //     print(response[i].location["lng"]);
 //     print(response[i].name);
-//     print(response[i].icon);
 //     print(response[i].open);
 //   }
 // }
@@ -182,14 +181,12 @@ void fromJson(List<dynamic> jsonList, List<Detail> data) {
 class Detail {
   final Map<String, double> location;
   final String name;
-  final String icon;
   final bool open;
 
-  const Detail({this.location, this.name, this.icon, this.open});
+  const Detail({this.location, this.name, this.open});
 
   Detail.fromJson(Map jsonMap)
     : location = jsonMap['location'].cast<String, double>(),
       name = jsonMap['name'],
-      icon = jsonMap['icon'],
       open = jsonMap['open'];
 }
