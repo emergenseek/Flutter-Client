@@ -139,7 +139,7 @@ class LockscreenInfo {
   }
 }
 
-Future<List<Detail>> callLocator() async {
+Future<void> callLocator(List<Detail> data) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
@@ -152,7 +152,8 @@ Future<List<Detail>> callLocator() async {
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
-    return fromJson(json.decode(response.body));
+    // And store it in the data object created by ServiceLocatorPageState
+    fromJson(json.decode(response.body), data);
   } else {
     // If the call was not successful, notify user of error code
     print("callLocator request failed. Error Code: ${response.statusCode}");
@@ -170,14 +171,12 @@ Future<List<Detail>> callLocator() async {
 //   }
 // }
 
-List<Detail> fromJson(List<dynamic> jsonList) {
-  List<Detail> data = new List<Detail>();
+void fromJson(List<dynamic> jsonList, List<Detail> data) {
   for (var i = 0; i < jsonList.length; i++)  {
     data.add(
       Detail.fromJson(jsonList[i])
     );
   }
-  return data;
 }
 
 class Detail {

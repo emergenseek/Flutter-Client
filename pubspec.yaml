@@ -21,8 +21,7 @@ dependencies:
   google_api_availability: "1.0.4"
   # To be able to use Google Map and Places
   google_maps_flutter:  ^0.4.0
-  flutter_google_places: ^0.2.1
-  location: ^2.3.3
+  url_launcher: ^5.0.2
 
   # The used version of the below plugins are the latest releases that are compatible without AndroidX
   # Later releases require migration to AndroidX
