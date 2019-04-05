@@ -9,7 +9,7 @@ Future<Post> sendSMS(List coordinates) async {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
+    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
     "type": 3,
     "message": "This is an SOS Emergency Alert from EmergenSeek",
     "last_known_location": coordinates,
@@ -33,7 +33,7 @@ Future<Post> sendCall(List coordinates) async {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
+    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
     "last_known_location": coordinates
   });
 
@@ -55,7 +55,7 @@ Future<LockscreenInfo> getLockscreenInfo() async {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b4f2a0b9-5c63-4257-9655-a3ee2b0519a1",
+    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
   });
 
   final response = await http.post(url, headers: headers, body: body);
