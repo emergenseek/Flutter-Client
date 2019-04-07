@@ -66,7 +66,108 @@ Future<LockscreenInfo> getLockscreenInfo() async {
     return LockscreenInfo.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
-    print("sendCall request failed. Error Code: ${response.statusCode}");
+    print("getLockscreenInfo request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequency) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "sos_sms": sos_sms,
+    "sos_calls": sos_calls,
+    "sos_lockscreen": sos_lockscreen,
+    "updates": updates,
+    "update_frequency": update_frequency,
+  });
+
+  final response = await http.patch(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return LockscreenInfo.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateSettings request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Settings> getSettings() async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+  });
+
+  final response = await http.get(url, headers: headers);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("getSettings request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void addContact(phone_number, relationship, first_name, last_name, email_address, tier) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/contact/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "phone_number": phone_number,
+    "relationship": relationship,
+    "first_name": first_name,
+    "last_name": last_name,
+    "email_address": email_address,
+    "tier": tier,
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("addContact request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateContactTier(phone_number, new_tier) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/tier/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "phone_number": phone_number,
+    "new_tier": new_tier,
+  });
+
+  final response = await http.put(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateContactTier request failed. Error Code: ${response.statusCode}");
   }
 }
 
@@ -134,6 +235,37 @@ class LockscreenInfo {
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;
+
+    return map;
+  }
+}
+
+class Settings {
+  final bool sos_sms;
+  final bool sos_calls;
+  final bool sos_lockscreen;
+  final bool updates;
+  final bool update_frequency;
+
+  Settings({this.sos_sms, this.sos_calls, this.sos_lockscreen, this.updates, this.update_frequency});
+
+  factory Settings.fromJson(Map<String, dynamic> json) {
+    return Settings(
+      sos_sms: json['sos_sms'],
+      sos_calls: json['sos_calls'],
+      sos_lockscreen: json['sos_lockscreen'],
+      updates: json['updates'],
+      update_frequency: json['update_frequency'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["sos_sms"] = sos_sms;
+    map["sos_calls"] = sos_calls;
+    map["sos_lockscreen"] = sos_lockscreen;
+    map["updates"] = updates;
+    map["update_frequency"] = update_frequency;
 
     return map;
   }
