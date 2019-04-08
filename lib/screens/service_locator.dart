@@ -98,9 +98,9 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ));
   } // End of map and marker ()
 
-  var future1 = new Future.delayed(new Duration(seconds: 4), () => 1);
-  var future2 =
-      new Future.delayed(new Duration(seconds: 2), () => throw 'error');
+  var future1 = new Future.delayed(new Duration(seconds: 2), () => 1);
+  //var future2 =
+    //  new Future.delayed(new Duration(seconds: 2), () => throw 'error');
 
   // The screen itself with appbar, googleMap, and floating SOS
   @override
@@ -124,7 +124,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
           ],
         ),
         body: new FutureBuilder(
-          future: Future.wait([future1, future2], eagerError: true,
+          future: Future.wait([future1], eagerError: true,
               cleanUp: (value) {
             print('processed $value');
           }).then(print).catchError(print),
