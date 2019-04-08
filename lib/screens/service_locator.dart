@@ -48,7 +48,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
     }
   }
 
-  // The Google Map and Marker, using var currentlocation
+  // The Google Map and Marker
   Widget _googleMap() {
     Set<Marker> markers = Set<Marker>();
     callLocator(this.data);
@@ -80,13 +80,12 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
             snippet: this.data[i].open ? 'open' : 'closed'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       ));
-    } // End of marker-search
+    } // Finished searching for markers
 
     return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: GoogleMap(
-          markers: markers,
           mapType: MapType.normal,
           myLocationEnabled: true,
           compassEnabled: true,
@@ -95,8 +94,13 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
               target:
                   LatLng(currentLocation.latitude, currentLocation.longitude),
               zoom: 14.5),
+          markers: markers,
         ));
   } // End of map and marker ()
+
+  var future1 = new Future.delayed(new Duration(seconds: 4), () => 1);
+  var future2 =
+      new Future.delayed(new Duration(seconds: 2), () => throw 'error');
 
   // The screen itself with appbar, googleMap, and floating SOS
   @override
@@ -119,16 +123,27 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
             )
           ],
         ),
-        body: locationToggle
-            ? Stack(
-                // Stack over the full-screen
-                children: <Widget>[_googleMap()])
-            : Center(
-                // Alternative option, if searching or cant find currentLocation
-                child: Text(
+        body: new FutureBuilder(
+          future: Future.wait([future1, future2], eagerError: true,
+              cleanUp: (value) {
+            print('processed $value');
+          }).then(print).catchError(print),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (locationToggle) {
+              return Stack(
+                  // Stack over the full-screen
+                  children: <Widget>[_googleMap()]);
+            } else {
+              return Center(
+                  // Alternative option, if searching or cant find currentLocation
+                  child: Text(
                 'Loading.. Please wait..',
                 style: TextStyle(fontSize: 20.0),
-              )),
+              ));
+            }
+          },
+        ),
         floatingActionButton: QuickSOS());
   } // End Of build()
+  
 } // End of class ServiceLocatorPageState

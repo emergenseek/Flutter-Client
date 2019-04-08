@@ -157,27 +157,17 @@ Future<void> callLocator(List<Detail> data) async {
   });
 
   final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     // And store it in the data object created by ServiceLocatorPageState
-    fromJson(json.decode(response.body), data);
+    return fromJson(json.decode(response.body), data);
   } else {
     // If the call was not successful, notify user of error code
     print("callLocator request failed. Error Code: ${response.statusCode}");
   }
 }
-
-// main(List<String> arguments) async {
-//   var response = await callLocator();
-//   for (var i = 0; i < response.length; i++)  {
-//     print(response[i].location["lat"]);
-//     print(response[i].location["lng"]);
-//     print(response[i].name);
-//     print(response[i].icon);
-//     print(response[i].open);
-//   }
-// }
 
 void fromJson(List<dynamic> jsonList, List<Detail> data) {
   for (var i = 0; i < jsonList.length; i++) {
@@ -191,11 +181,24 @@ class Detail {
   final String icon;
   final bool open;
 
-  const Detail({this.location, this.name, this.icon, this.open});
+  Detail({this.location, this.name, this.icon, this.open});
 
-  Detail.fromJson(Map jsonMap)
-      : location = jsonMap['location'].cast<String, double>(),
-        name = jsonMap['name'],
-        icon = jsonMap['icon'],
-        open = jsonMap['open'];
+  factory Detail.fromJson(Map<String, dynamic> json) {
+    return Detail(
+      location: json['location'].cast<String, double>(),
+      name: json['name'],
+      open: json['open'],
+      icon: json['icon'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["location"] = location;
+    map["name"] = name;
+    map["open"] = open;
+    map["icon"] = icon;
+
+    return map;
+  }
 }
