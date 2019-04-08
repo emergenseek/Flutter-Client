@@ -98,7 +98,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         ));
   } // End of map and marker ()
 
-  var future1 = new Future.delayed(new Duration(seconds: 2), () => 1);
+  var future1 = new Future.delayed(new Duration(seconds: 6), () => 1);
   //var future2 =
     //  new Future.delayed(new Duration(seconds: 2), () => throw 'error');
 
