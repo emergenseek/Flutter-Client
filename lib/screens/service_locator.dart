@@ -1,4 +1,3 @@
-import 'dart:async'; // For Completer
 import 'package:flutter/material.dart';
 import 'package:EmergenSeek/screens/nav_menu.dart';
 import 'package:EmergenSeek/screens/sos_quick_button.dart';
@@ -17,6 +16,7 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
   // ?options for body: only run when there is currentLocation located
   bool locationToggle = false;
   var currentLocation;
+
   // getCurrentLocation set var currentLocation
   @override
   void initState() {
@@ -33,24 +33,11 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
 
   // Accesing APIs with List<Detail>
   List<Detail> data = new List<Detail>();
-  // GoogleMapController for onMapCreated
-  GoogleMapController controller;
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController mapController;
 
-  // Navigating long/lat to relocate with selected marker
-  Future<void> goToLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    callLocator(this.data);
-    for (var i = 0; i < this.data.length; i++) {
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target:
-            LatLng(this.data[i].location['lat'], this.data[i].location['lng']),
-        zoom: 16.5,
-        tilt: 52.0,
-        bearing: 40.0,
-      )));
-    }
-  } // End of goToLocation effects
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   // Heading to GoogleMapAndroid App
   _launchURL(url) async {
@@ -71,7 +58,17 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
         position:
             LatLng(this.data[i].location['lat'], this.data[i].location['lng']),
         onTap: () {
-          goToLocation();
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                bearing: 40.0,
+                target: LatLng(
+                    this.data[i].location['lat'], this.data[i].location['lng']),
+                tilt: 52.0,
+                zoom: 16.5,
+              ),
+            ),
+          );
         },
         infoWindow: InfoWindow(
             onTap: () => _launchURL(
@@ -93,14 +90,11 @@ class ServiceLocatorPageState extends State<ServiceLocatorPage> {
           mapType: MapType.normal,
           myLocationEnabled: true,
           compassEnabled: true,
+          onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
               target:
                   LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 14),
-          // Define Google Map Controller for goToController()
-          onMapCreated: (controller) {
-            _controller.complete(controller);
-          },
+              zoom: 14.5),
         ));
   } // End of map and marker ()
 

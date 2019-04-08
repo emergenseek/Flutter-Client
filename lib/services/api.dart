@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 Future<Post> sendSMS(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -29,7 +29,7 @@ Future<Post> sendSMS(List coordinates) async {
 
 Future<Post> sendCall(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -51,7 +51,7 @@ Future<Post> sendCall(List coordinates) async {
 
 Future<LockscreenInfo> getLockscreenInfo() async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/lock";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -108,8 +108,15 @@ class LockscreenInfo {
   final String email_address;
   final String phone_number;
 
-  LockscreenInfo({this.first_name, this.last_name, this.blood_type, this.age,
-        this.primary_residence, this.phone_pin, this.email_address, this.phone_number});
+  LockscreenInfo(
+      {this.first_name,
+      this.last_name,
+      this.blood_type,
+      this.age,
+      this.primary_residence,
+      this.phone_pin,
+      this.email_address,
+      this.phone_number});
 
   factory LockscreenInfo.fromJson(Map<String, dynamic> json) {
     return LockscreenInfo(
@@ -140,12 +147,13 @@ class LockscreenInfo {
 }
 
 Future<void> callLocator(List<Detail> data) async {
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
-  Map<String,String> headers = {
+  var url =
+      "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "current_location": [-31.9517231, 115.8603252] 
+    "current_location": [-31.9517231, 115.8603252]
   });
 
   final response = await http.post(url, headers: headers, body: body);
@@ -166,27 +174,28 @@ Future<void> callLocator(List<Detail> data) async {
 //     print(response[i].location["lat"]);
 //     print(response[i].location["lng"]);
 //     print(response[i].name);
+//     print(response[i].icon);
 //     print(response[i].open);
 //   }
 // }
 
 void fromJson(List<dynamic> jsonList, List<Detail> data) {
-  for (var i = 0; i < jsonList.length; i++)  {
-    data.add(
-      Detail.fromJson(jsonList[i])
-    );
+  for (var i = 0; i < jsonList.length; i++) {
+    data.add(Detail.fromJson(jsonList[i]));
   }
 }
 
 class Detail {
   final Map<String, double> location;
   final String name;
+  final String icon;
   final bool open;
 
-  const Detail({this.location, this.name, this.open});
+  const Detail({this.location, this.name, this.icon, this.open});
 
   Detail.fromJson(Map jsonMap)
-    : location = jsonMap['location'].cast<String, double>(),
-      name = jsonMap['name'],
-      open = jsonMap['open'];
+      : location = jsonMap['location'].cast<String, double>(),
+        name = jsonMap['name'],
+        icon = jsonMap['icon'],
+        open = jsonMap['open'];
 }
