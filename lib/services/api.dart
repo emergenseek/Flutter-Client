@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 Future<Post> sendSMS(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -29,7 +29,7 @@ Future<Post> sendSMS(List coordinates) async {
 
 Future<Post> sendCall(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -51,7 +51,7 @@ Future<Post> sendCall(List coordinates) async {
 
 Future<LockscreenInfo> getLockscreenInfo() async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/lock";
-  Map<String,String> headers = {
+  Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
@@ -108,8 +108,15 @@ class LockscreenInfo {
   final String email_address;
   final String phone_number;
 
-  LockscreenInfo({this.first_name, this.last_name, this.blood_type, this.age,
-        this.primary_residence, this.phone_pin, this.email_address, this.phone_number});
+  LockscreenInfo(
+      {this.first_name,
+      this.last_name,
+      this.blood_type,
+      this.age,
+      this.primary_residence,
+      this.phone_pin,
+      this.email_address,
+      this.phone_number});
 
   factory LockscreenInfo.fromJson(Map<String, dynamic> json) {
     return LockscreenInfo(
@@ -134,6 +141,63 @@ class LockscreenInfo {
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;
+
+    return map;
+  }
+}
+
+Future<void> callLocator(List<Detail> data) async {
+  var url =
+      "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "current_location": [-31.9517231, 115.8603252]
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    // And store it in the data object created by ServiceLocatorPageState
+    return fromJson(json.decode(response.body), data);
+  } else {
+    // If the call was not successful, notify user of error code
+    print("callLocator request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void fromJson(List<dynamic> jsonList, List<Detail> data) {
+  for (var i = 0; i < jsonList.length; i++) {
+    data.add(Detail.fromJson(jsonList[i]));
+  }
+}
+
+class Detail {
+  final Map<String, double> location;
+  final String name;
+  final String icon;
+  final bool open;
+
+  Detail({this.location, this.name, this.icon, this.open});
+
+  factory Detail.fromJson(Map<String, dynamic> json) {
+    return Detail(
+      location: json['location'].cast<String, double>(),
+      name: json['name'],
+      open: json['open'],
+      icon: json['icon'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["location"] = location;
+    map["name"] = name;
+    map["open"] = open;
+    map["icon"] = icon;
 
     return map;
   }
