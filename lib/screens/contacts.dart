@@ -14,9 +14,11 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.blueGrey[400],
         drawer: NavMenu(),
         endDrawer: FilterMenu(),
@@ -35,7 +37,7 @@ class _ContactsPageState extends State<ContactsPage> {
             IconButton(
               icon: Icon(Icons.filter_list),
               tooltip: 'Refresh Contacts',
-              //TODO: Open filter drawer onPressed
+              onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
             ),
             IconButton(
               icon: Icon(Icons.settings),
