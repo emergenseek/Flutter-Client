@@ -37,12 +37,24 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-        body: Center(
-            child: ListView(
-              children: <Widget>[
-                _showProfileForm(),
-              ],
-            )
+        body: new FutureBuilder(
+          future: ScopedModel.of<AppModel>(context).getProfileInfo(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(snapshot.hasData) {
+              return Center(
+                  child: ListView(
+                    children: <Widget>[
+                      _showProfileForm(),
+                    ],
+                  )
+              );
+            } else {
+              return Center(
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                      child: CircularProgressIndicator()));
+            }
+          }
         ),
         floatingActionButton: QuickSOS());
   }
@@ -72,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Icons.face,
                       color: Colors.blue[200],
                     )),
+                initialValue: model.getFirstName() + ' ' + model.getLastName(),
                 validator: (value) =>
                 value.isEmpty
                     ? 'Name can\'t be empty'
@@ -108,6 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Icons.calendar_today,
                       color: Colors.blue[200],
                     )),
+                initialValue: model.getAge().toString(),
                 validator: (value) =>
                 value.isEmpty
                     ? 'Name can\'t be empty'
@@ -126,12 +140,61 @@ class _ProfilePageState extends State<ProfilePage> {
                       Icons.invert_colors,
                       color: Colors.blue[200],
                     )),
+                initialValue: model.getBloodType(),
                 validator: (value) =>
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
                 //onSaved: (value) => _email = value,
               ),
+              new TextFormField(
+                maxLines: 1,
+                autofocus: false,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                decoration: new InputDecoration(
+                    hintText: 'Email',
+                    icon: new Icon(
+                      Icons.email,
+                      color: Colors.blue[200],
+                    )),
+                initialValue: model.getEmail(),
+                validator: (value) =>
+                value.isEmpty
+                    ? 'Name can\'t be empty'
+                    : null,
+                //onSaved: (value) => _email = value,
+              ),
+              new TextFormField(
+                maxLines: 1,
+                autofocus: false,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                decoration: new InputDecoration(
+                    hintText: 'Phone',
+                    icon: new Icon(
+                      Icons.phone,
+                      color: Colors.blue[200],
+                    )),
+                initialValue: model.getPhoneNumber(),
+                validator: (value) =>
+                value.isEmpty
+                    ? 'Name can\'t be empty'
+                    : null,
+                //onSaved: (value) => _email = value,
+              ),
+              new Padding(
+                  padding: EdgeInsets.all(10.0)
+              ),
+              new RaisedButton(
+                  child: new Text("Confirm", style: TextStyle(color: Colors.lightBlue[200])),
+                  color: Theme.of(context).accentColor,
+                  splashColor: Colors.blueGrey,
+                  onPressed: () {},  //TODO: Call API to update profile info
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+              )
             ],)
         )
     );}

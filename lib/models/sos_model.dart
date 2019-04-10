@@ -45,7 +45,7 @@ mixin SOSModel on Model {
 
   Future activateSOS() async {
     _sosActive = true;
-    List coordinates = await getCurrentLocation();
+    List coordinates = await pollCurrentLocation();
 
     // Display local notification
     _notifications.displaySOSNotification();

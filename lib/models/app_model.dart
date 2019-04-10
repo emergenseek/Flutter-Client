@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/auth.dart';
+import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
 import 'package:EmergenSeek/models/lUpdates_model.dart';
 import 'package:EmergenSeek/models/contacts_model.dart';
@@ -16,7 +17,7 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
   String userId;
 
   // Key: latitude/longitude, Val: coordinate
-  Map<String, double> currentLocation;
+  List currentLocation;
 
   void setAuth(BaseAuth auth){
     this.auth = auth;
@@ -52,10 +53,10 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
   }
 
   Future updateCurrentPosition() async {
-    currentLocation = await getCurrentLocation();
+    currentLocation = await pollCurrentLocation();
   }
 
-  Map getCurrentLocation() {
+  List getCurrentLocation() {
     return currentLocation;
   }
 }

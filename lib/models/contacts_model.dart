@@ -10,6 +10,8 @@ mixin ContactsModel on Model {
     return _contacts;
   }
 
+  // Return true once request has been fulfilled
+  // signals FutureBuilder to build
   Future<bool> refreshContacts() async {
     _contacts = await retrieveContacts();
     return true;
