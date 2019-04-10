@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<Post> sendSMS(List coordinates) async {
+Future<Post> sendSMS(List coordinates, int alertType) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
     "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
-    "type": 3,
+    "type": alertType,  // 1 = Severe, 2 = Mild, 3 = Check In
     "message": "This is an SOS Emergency Alert from EmergenSeek",
     "last_known_location": coordinates,
   });
@@ -119,7 +119,7 @@ Future<Settings> getSettings() async {
   }
 }
 
-void addContact(phone_number, relationship, first_name, last_name, email_address, tier) async {
+void addNewContact(phone_number, relationship, first_name, last_name, email_address, tier) async {
   //TODO: Update url to dynamically use the user's UID
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/contact/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
   Map<String,String> headers = {

@@ -55,7 +55,7 @@ mixin SOSModel on Model {
       sendCall(coordinates);
     }
     if(_sendTexts == true){
-      sendSMS(coordinates);
+      _emergencyTier == EmergencyTier.SEVERE ? sendSMS(coordinates, 1) : sendSMS(coordinates, 2);
     }
 
     // Display personal info as a notification if user has enabled it
