@@ -61,7 +61,7 @@ class _ContactsPageState extends State<ContactsPage> {
                       iconColor: Colors.blue[200],
                       child: ListView(
                         children:
-                            buildContactList(model.getContacts(), context),
+                            buildContactList(model.getContacts(), model.getContactTiers(), context),
                       )));
             } else {
               return Center(
@@ -76,20 +76,20 @@ class _ContactsPageState extends State<ContactsPage> {
 
   // Constructs and returns list of contacts formatted as list tiles
   List<ContactListItem> buildContactList(
-      Iterable<Contact> contacts, BuildContext context) {
+      Iterable<Contact> contacts, Map<String, int> tierMap, BuildContext context) {
     return contacts
-        .map((contact) => ContactListItem(contact, context))
+        .map((contact) => ContactListItem(contact, tierMap, context))
         .toList();
   }
 }
 
 // List view representation of a contact
 class ContactListItem extends ListTile {
-  ContactListItem(Contact contact, BuildContext context)
+  ContactListItem(Contact contact, Map<String, int> tierMap, BuildContext context)
       : super(
             title: Text(contact.displayName),
             subtitle: Text(contact.phones.first.value),
-            //TODO: Add tier display trailing:
+            trailing: Text("Tier: " + tierMap[contact.identifier].toString()),
             leading: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blue[200],
@@ -126,7 +126,7 @@ void showTiers(BuildContext context, Contact contact) {
                           new FlatButton(
                               onPressed: () {
                                 List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(displayName[0], displayName[1], contact.phones.first.value, 1);
+                                model.addNewContact(contact, 1);
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -137,7 +137,7 @@ void showTiers(BuildContext context, Contact contact) {
                           new FlatButton(
                               onPressed: () {
                                 List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(displayName[0], displayName[1], contact.phones.first.value, 2);
+                                model.addNewContact(contact, 2);
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -148,7 +148,7 @@ void showTiers(BuildContext context, Contact contact) {
                           new FlatButton(
                               onPressed: () {
                                 List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(displayName[0], displayName[1], contact.phones.first.value, 3);
+                                model.addNewContact(contact, 3);
                                 Navigator.of(context).pop();
                               },
                               child: new Text(

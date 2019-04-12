@@ -178,12 +178,11 @@ void addNewContact(phone_number, relationship, first_name, last_name, email_addr
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
     "phone_number": phone_number,
-    "relationship": relationship,
+    //"relationship": relationship,
     "first_name": first_name,
     "last_name": last_name,
-    "email_address": email_address,
+    //"email_address": email_address,
     "tier": tier,
   });
 
@@ -206,7 +205,6 @@ void updateContactTier(phone_number, new_tier) async {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
     "phone_number": phone_number,
     "new_tier": new_tier,
   });
