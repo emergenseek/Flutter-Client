@@ -42,7 +42,7 @@ mixin ProfileModel on Model {
   setEmail(String newEmail) { _email_address = newEmail; }
   setPhoneNumber(String newPhoneNum) { _phone_number = newPhoneNum; }
 
-  updateProfileInfo(var info) {
-    // POST/PATCH request to update all profile values
+  updateProfileInfo(Map<String, dynamic> profile) {
+    updateProfile(profile);
   }
 }

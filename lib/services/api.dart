@@ -103,9 +103,6 @@ Future<Settings> getSettings() async {
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
-  var body = jsonEncode({
-    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
-  });
 
   final response = await http.get(url, headers: headers);
   print(json.decode(response.body));
@@ -116,6 +113,61 @@ Future<Settings> getSettings() async {
   } else {
     // If the call was not successful, notify user of error code
     print("getSettings request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Profile> getProfile() async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  final response = await http.get(url, headers: headers);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return Profile.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("getProfile request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateProfile(Map<String, dynamic> profile) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "first_name": profile["first_name"],
+    "last_name": profile["last_name"],
+    "blood_type": profile["blood_type"],
+    "age": profile["age"],
+    "primary_residence": {
+      "city": "Lubbock",
+      "country": "United States of America",
+      "line1": "3138 4th St",
+      "line2": "Apt 101",
+      "state": "Texas",
+      "zip_code": "79415"
+    },
+    "phone_pin": profile["phone_pin"],
+    "email_address": profile["email_address"],
+    "phone_number": profile["phone_number"],
+  });
+
+  final response = await http.patch(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return LockscreenInfo.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateProfile request failed. Error Code: ${response.statusCode}");
   }
 }
 
@@ -143,7 +195,7 @@ void addNewContact(phone_number, relationship, first_name, last_name, email_addr
     //return Settings.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
-    print("addContact request failed. Error Code: ${response.statusCode}");
+    print("addNewContact request failed. Error Code: ${response.statusCode}");
   }
 }
 
@@ -232,6 +284,47 @@ class LockscreenInfo {
     map["blood_type"] = blood_type;
     map["age"] = age;
     //map["primary_residence"] = primary_residence;
+    map["phone_pin"] = phone_pin;
+    map["email_address"] = email_address;
+    map["phone_number"] = phone_number;
+
+    return map;
+  }
+}
+
+class Profile {
+  final String first_name;
+  final String last_name;
+  final String blood_type;
+  final int age;
+  final Map<String, String> primary_residence;
+  final int phone_pin;
+  final String email_address;
+  final String phone_number;
+
+  Profile({this.first_name, this.last_name, this.blood_type, this.age,
+    this.primary_residence, this.phone_pin, this.email_address, this.phone_number});
+
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      first_name: json['first_name'],
+      last_name: json['last_name'],
+      blood_type: json['blood_type'],
+      age: json['age'],
+      primary_residence: json['primary_residence'],
+      phone_pin: json['phone_pin'],
+      email_address: json['email_address'],
+      phone_number: json['phone_number'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["first_name"] = first_name;
+    map["last_name"] = last_name;
+    map["blood_type"] = blood_type;
+    map["age"] = age;
+    map["primary_residence"] = primary_residence;
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;

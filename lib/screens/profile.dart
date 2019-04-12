@@ -192,11 +192,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: new Text("Confirm", style: TextStyle(color: Colors.lightBlue[200])),
                   color: Theme.of(context).accentColor,
                   splashColor: Colors.blueGrey,
-                  onPressed: () {},  //TODO: Call API to update profile info
+                  onPressed: () {
+                    Map<String, dynamic> profile = new Map<String, dynamic>();
+                    profile["first_name"] = model.getFirstName();
+                    profile["last_name"] = model.getLastName();
+                    profile["blood_type"] = model.getBloodType();
+                    profile["age"] = model.getAge();
+                    //profile["primary_residence"] = primary_residence;
+                    profile["phone_pin"] = model.getPhonePin();
+                    profile["email_address"] = model.getEmail();
+                    profile["phone_number"] = model.getPhoneNumber();
+                    model.updateProfileInfo(profile);
+                  },
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
               )
             ],)
         )
     );}
-
 }
+
+
