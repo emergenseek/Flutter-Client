@@ -1,19 +1,108 @@
-import 'dart:async'; // For Completer
 import 'package:flutter/material.dart';
 import 'package:EmergenSeek/screens/nav_menu.dart';
 import 'package:EmergenSeek/screens/sos_quick_button.dart';
 import 'package:EmergenSeek/screens/settings.dart';
+import 'package:EmergenSeek/services/api.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ServiceLocatorPage extends StatefulWidget {
   @override
-  _ServiceLocatorPageState createState() {
-    return new _ServiceLocatorPageState();
-  }
+  ServiceLocatorPageState createState() => ServiceLocatorPageState();
 }
 
-// The screen itself, contains an app bar, the map, and the SOS button
-class _ServiceLocatorPageState extends State<ServiceLocatorPage> {
+class ServiceLocatorPageState extends State<ServiceLocatorPage> {
+  // ?options for body: only run when there is currentLocation located
+  bool locationToggle = false;
+  var currentLocation;
+
+  // getCurrentLocation set var currentLocation
+  @override
+  void initState() {
+    super.initState();
+    Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((currLocation) {
+      setState(() {
+        this.currentLocation = currLocation;
+        this.locationToggle = true;
+      });
+    });
+  }
+
+  // Accesing APIs with List<Detail>
+  List<Detail> data = new List<Detail>();
+  GoogleMapController mapController;
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  // Heading to GoogleMapAndroid App
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  // The Google Map and Marker
+  Widget _googleMap() {
+    Set<Marker> markers = Set<Marker>();
+    callLocator(this.data);
+    for (var i = 0; i < this.data.length; i++) {
+      markers.add(Marker(
+        markerId: MarkerId(this.data[i].name),
+        position:
+            LatLng(this.data[i].location['lat'], this.data[i].location['lng']),
+        onTap: () {
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                bearing: 40.0,
+                target: LatLng(
+                    this.data[i].location['lat'], this.data[i].location['lng']),
+                tilt: 52.0,
+                zoom: 16.5,
+              ),
+            ),
+          );
+        },
+        infoWindow: InfoWindow(
+            onTap: () => _launchURL(
+                "google.navigation:q=${this.data[i].location['lat']},${this.data[i].location['lng']}"
+                // For Google Maps in a browser
+                //"http://maps.google.com/?q=${this.data[i].location['lat']},${this.data[i].location['lng']}"
+                ),
+            title: this.data[i].name,
+            snippet: this.data[i].open ? 'open' : 'closed'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ));
+    } // Finished searching for markers
+
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: GoogleMap(
+          mapType: MapType.normal,
+          myLocationEnabled: true,
+          compassEnabled: true,
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+              target:
+                  LatLng(currentLocation.latitude, currentLocation.longitude),
+              zoom: 14.5),
+          markers: markers,
+        ));
+  } // End of map and marker ()
+
+  var future1 = new Future.delayed(new Duration(seconds: 6), () => 1);
+  //var future2 =
+    //  new Future.delayed(new Duration(seconds: 2), () => throw 'error');
+
+  // The screen itself with appbar, googleMap, and floating SOS
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -34,175 +123,27 @@ class _ServiceLocatorPageState extends State<ServiceLocatorPage> {
             )
           ],
         ),
-        body: Stack(
-          children: <Widget>[
-            googleMap(context),
-            buildContainer(),
-          ],
+        body: new FutureBuilder(
+          future: Future.wait([future1], eagerError: true,
+              cleanUp: (value) {
+            print('processed $value');
+          }).then(print).catchError(print),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (locationToggle) {
+              return Stack(
+                  // Stack over the full-screen
+                  children: <Widget>[_googleMap()]);
+            } else {
+              return Center(
+                  // Alternative option, if searching or cant find currentLocation
+                  child: Text(
+                'Loading.. Please wait..',
+                style: TextStyle(fontSize: 20.0),
+              ));
+            }
+          },
         ),
         floatingActionButton: QuickSOS());
-  }
-}
-
-// Google Map Controller for zoom_in function
-Completer<GoogleMapController> _controller = Completer();
-Widget googleMap(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition:
-              // TO DO: Get_User_LatLng and place in 'target'
-              CameraPosition(target: LatLng(33.5779, -101.8552), zoom: 12),
-              //Define Google Map Controller with controller
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-          /*markers: {
-            // TO DO: SELECTED_MarkerID such as pharmacy, hospital
-            pharmacyMarker, hospitalMarker
-          },*/
-        ));
-  }
-
-// Navigating MARKER long/lat to relocate with BOXES && vs
-  Future<void> goToLocation(double lat, double long) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat, long),
-      zoom: 15,
-      tilt: 50.0,
-      bearing: 45.0,
-    )));
-  }
-
-Marker pharmacyMarker = Marker(
-  markerId: MarkerId('pharmacy'),
-  // TO DO: Get_Searched_LatLng
-  position: LatLng(33.5897, -101.8560),
-  // TO DO: Get_SELECTED_Searched_Place
-  infoWindow: InfoWindow(title: 'Pharmacy'),
-  icon: BitmapDescriptor.defaultMarkerWithHue(
-    BitmapDescriptor.hueBlue,
-  ),
-);
-
-// TO DO: Loop for more Get_Searched_LatLng
-Marker hospitalMarker = Marker(
-  markerId: MarkerId('hospital'),
-  // TO DO: Get_Searched_LatLng
-  position: LatLng(33.5885, -101.8931),
-  // TO DO: Get_SELECTED_Searched_Place
-  infoWindow: InfoWindow(title: 'Hospital'),
-  icon: BitmapDescriptor.defaultMarkerWithHue(
-    BitmapDescriptor.hueBlue,
-  ),
-);
-
-// TO DO: API details
-Widget buildContainer() {
-  return Align(
-    alignment: Alignment.bottomLeft,
-    child: Container(
-      margin: EdgeInsets.symmetric(vertical: 20.0),
-      height: 150.0,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          SizedBox(
-            width: 10.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            // TO DO: API details
-            child: boxes(
-                "https://i.ibb.co/z8CgfZy/453947-walgreens-photo.jpg",
-                33.5897, -101.8560,
-                "Pharmacy"),
-          ),
-          SizedBox(
-            width: 10.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            // TO DO: API details
-            child: boxes(
-                "https://i.ibb.co/zmW2gnf/2017-11-08large-data-breach.jpg",
-                33.5885, -101.8931,
-                "Hospital"),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Widget boxes(String _image, double lat, double long, String locationName) {
-  return GestureDetector(
-    onTap: () {
-      goToLocation(lat, long);
-    },
-    child: Container(
-      child: new FittedBox(
-        child: Material(
-            color: Colors.white,
-            elevation: 14.0,
-            borderRadius: BorderRadius.circular(24.0),
-            shadowColor: Color(0x802196F3),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 180,
-                  height: 200,
-                  child: ClipRRect(
-                    borderRadius: new BorderRadius.circular(24.0),
-                    child: Image(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(_image),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: myDetailsContainer(locationName),
-                  ),
-                )
-              ],
-            )),
-      ),
-    ),
-  );
-}
-
-// TO DO: API details
-Widget myDetailsContainer(String locationName) {
-  return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-              child: Text(
-            locationName,
-            style: TextStyle(
-                color: Color(0xff6200ee),
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold),
-          )),
-        ),
-        SizedBox(height: 5.0),
-        Container(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  child: Text("Details: ... ",
-                      style: TextStyle(color: Colors.black54, fontSize: 18.0)),
-                )
-              ]),
-        )
-      ]);
-}
+  } // End Of build()
+  
+} // End of class ServiceLocatorPageState
