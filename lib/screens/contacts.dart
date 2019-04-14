@@ -14,11 +14,14 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.blueGrey[400],
         drawer: NavMenu(),
+        endDrawer: FilterMenu(),
         appBar: AppBar(
           title: Text("Contacts"),
           actions: <Widget>[
@@ -30,6 +33,11 @@ class _ContactsPageState extends State<ContactsPage> {
                   // Refreshes contacts list
                 });
               },
+            ),
+            IconButton(
+              icon: Icon(Icons.filter_list),
+              tooltip: 'Refresh Contacts',
+              onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
             ),
             IconButton(
               icon: Icon(Icons.settings),
@@ -52,7 +60,8 @@ class _ContactsPageState extends State<ContactsPage> {
                       textColor: Colors.white,
                       iconColor: Colors.blue[200],
                       child: ListView(
-                        children: buildContactList(model.getContacts(), context),
+                        children:
+                            buildContactList(model.getContacts(), model.getContactTiers(), context),
                       )));
             } else {
               return Center(
@@ -66,98 +75,173 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   // Constructs and returns list of contacts formatted as list tiles
-  List<ContactListItem> buildContactList(Iterable<Contact> contacts, BuildContext context) {
-    return contacts.map((contact) => ContactListItem(contact, context)).toList();
+  List<ContactListItem> buildContactList(
+      Iterable<Contact> contacts, Map<String, int> tierMap, BuildContext context) {
+    return contacts
+        .map((contact) => ContactListItem(contact, tierMap, context))
+        .toList();
   }
 }
 
 // List view representation of a contact
 class ContactListItem extends ListTile {
-  ContactListItem(Contact contact, BuildContext context)
+  ContactListItem(Contact contact, Map<String, int> tierMap, BuildContext context)
       : super(
             title: Text(contact.displayName),
             subtitle: Text(contact.phones.first.value),
+            trailing: Text("Tier: " + tierMap[contact.identifier].toString()),
             leading: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blue[200],
                 child: Text(contact.displayName[0])),
-            onTap: () {showTiers(context);}
-  );
+            onTap: () {
+              showTiers(context, contact);
+            });
 }
 
 // Dialog box for adding contacts to an alert tier
-void showTiers(BuildContext context) {
+void showTiers(BuildContext context, Contact contact) {
   showDialog(
-    context: context,
+      context: context,
       builder: (BuildContext context) {
         return ScopedModelDescendant<AppModel>(
             builder: (context, child, model) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              contentPadding: EdgeInsets.all(17.0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new Text(
-                    "Add this contact to an alert tier",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  contentPadding: EdgeInsets.all(17.0),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      new FlatButton(
-                          onPressed: () {
-                            //TODO: Add to tier
-                            Navigator.of(context).pop();
-                          },
-                          child: new Text(
-                            "Tier 1",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.red),
-                          )),
-                      new FlatButton(
-                          onPressed: () {
-                            //TODO: Add to tier
-                            Navigator.of(context).pop();
-                          },
-                          child: new Text(
-                            "Tier 2",
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.blueAccent),
-                          )),
-                      new FlatButton(
-                          onPressed: () {
-                            //TODO: Add to tier
-                            Navigator.of(context).pop();
-                          },
-                          child: new Text(
-                            "Tier 3",
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.tealAccent[400]),
-                          )),
+                      new Text(
+                        "Add this contact to an alert tier",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25.0),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          new FlatButton(
+                              onPressed: () {
+                                List<String> displayName = contact.displayName.split(" ");
+                                model.addNewContact(contact, 1);
+                                Navigator.of(context).pop();
+                              },
+                              child: new Text(
+                                "Tier 1",
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.red),
+                              )),
+                          new FlatButton(
+                              onPressed: () {
+                                List<String> displayName = contact.displayName.split(" ");
+                                model.addNewContact(contact, 2);
+                                Navigator.of(context).pop();
+                              },
+                              child: new Text(
+                                "Tier 2",
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.blueAccent),
+                              )),
+                          new FlatButton(
+                              onPressed: () {
+                                List<String> displayName = contact.displayName.split(" ");
+                                model.addNewContact(contact, 3);
+                                Navigator.of(context).pop();
+                              },
+                              child: new Text(
+                                "Tier 3",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.tealAccent[400]),
+                              )),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: new Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.black),
+                              )),
+                        ],
+                      )
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: new Text(
-                            "Cancel",
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black),
-                          )),
-                    ],
-                  )
-                ],
-              ),
-            ));
+                ));
       });
+}
+
+class FilterMenu extends StatefulWidget {
+  @override
+  FilterMenuState createState() {
+    return new FilterMenuState();
+  }
+}
+
+class FilterMenuState extends State<FilterMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) => Drawer(
+            child: Container(
+                color: Theme.of(context).primaryColor,
+                child: ListTileTheme(
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    child: ListView(
+                      children: <Widget>[
+                        Container(
+                          height: 50.0,
+                          child: DrawerHeader(
+                              child: Text("Filter Contacts",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 17.0))),
+                        ),
+                        CheckboxListTile(
+                          title: Text("Unregistered"),
+                          activeColor: Colors.blue[200],
+                          value: model.getShowUnregistered(),
+                          onChanged: (value) {
+                            model.toggleUnregistered();
+                            setState(() {});
+                          },
+                        ),
+                        CheckboxListTile(
+                          title: Text("Tier 1"),
+                          activeColor: Colors.blue[200],
+                          value: model.getShowTier1(),
+                          onChanged: (value) {
+                            model.toggleTier1();
+                            setState(() {});
+                          },
+                        ),
+                        CheckboxListTile(
+                          title: Text("Tier 2"),
+                          activeColor: Colors.blue[200],
+                          value: model.getShowTier2(),
+                          onChanged: (value) {
+                            model.toggleTier2();
+                            setState(() {});
+                          },
+                        ),
+                        CheckboxListTile(
+                          title: Text("Tier 3"),
+                          activeColor: Colors.blue[200],
+                          value: model.getShowTier3(),
+                          onChanged: (value) {
+                            model.toggleTier3();
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    )))));
+  }
 }

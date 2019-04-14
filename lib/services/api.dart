@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<Post> sendSMS(List coordinates) async {
+Future<Post> sendSMS(List coordinates, int alertType) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
   Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
     "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
-    "type": 3,
+    "type": alertType,  // 1 = Severe, 2 = Mild, 3 = Check In
     "message": "This is an SOS Emergency Alert from EmergenSeek",
     "last_known_location": coordinates,
   });
@@ -66,7 +66,158 @@ Future<LockscreenInfo> getLockscreenInfo() async {
     return LockscreenInfo.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
-    print("sendCall request failed. Error Code: ${response.statusCode}");
+    print("getLockscreenInfo request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequency) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "sos_sms": sos_sms,
+    "sos_calls": sos_calls,
+    "sos_lockscreen": sos_lockscreen,
+    "updates": updates,
+    "update_frequency": update_frequency,
+  });
+
+  final response = await http.patch(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return LockscreenInfo.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateSettings request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Settings> getSettings() async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  final response = await http.get(url, headers: headers);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("getSettings request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Profile> getProfile() async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  final response = await http.get(url, headers: headers);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return Profile.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("getProfile request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateProfile(Map<String, dynamic> profile) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "first_name": profile["first_name"],
+    "last_name": profile["last_name"],
+    "blood_type": profile["blood_type"],
+    "age": profile["age"],
+    "primary_residence": {
+      "city": "Lubbock",
+      "country": "United States of America",
+      "line1": "3138 4th St",
+      "line2": "Apt 101",
+      "state": "Texas",
+      "zip_code": "79415"
+    },
+    "phone_pin": profile["phone_pin"],
+    "email_address": profile["email_address"],
+    "phone_number": profile["phone_number"],
+  });
+
+  final response = await http.patch(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return LockscreenInfo.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateProfile request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void addNewContact(phone_number, relationship, first_name, last_name, email_address, tier) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/contact/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "phone_number": phone_number,
+    //"relationship": relationship,
+    "first_name": first_name,
+    "last_name": last_name,
+    //"email_address": email_address,
+    "tier": tier,
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("addNewContact request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void updateContactTier(phone_number, new_tier) async {
+  //TODO: Update url to dynamically use the user's UID
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/tier/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "phone_number": phone_number,
+    "new_tier": new_tier,
+  });
+
+  final response = await http.put(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    //return Settings.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("updateContactTier request failed. Error Code: ${response.statusCode}");
   }
 }
 
@@ -146,6 +297,78 @@ class LockscreenInfo {
   }
 }
 
+class Profile {
+  final String first_name;
+  final String last_name;
+  final String blood_type;
+  final int age;
+  final Map<String, String> primary_residence;
+  final int phone_pin;
+  final String email_address;
+  final String phone_number;
+
+  Profile({this.first_name, this.last_name, this.blood_type, this.age,
+    this.primary_residence, this.phone_pin, this.email_address, this.phone_number});
+
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      first_name: json['first_name'],
+      last_name: json['last_name'],
+      blood_type: json['blood_type'],
+      age: json['age'],
+      //primary_residence: json['primary_residence'],
+      phone_pin: json['phone_pin'],
+      email_address: json['email_address'],
+      phone_number: json['phone_number'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["first_name"] = first_name;
+    map["last_name"] = last_name;
+    map["blood_type"] = blood_type;
+    map["age"] = age;
+    //map["primary_residence"] = primary_residence;
+    map["phone_pin"] = phone_pin;
+    map["email_address"] = email_address;
+    map["phone_number"] = phone_number;
+
+    return map;
+  }
+}
+
+class Settings {
+  final bool sos_sms;
+  final bool sos_calls;
+  final bool sos_lockscreen;
+  final bool updates;
+  final bool update_frequency;
+
+  Settings({this.sos_sms, this.sos_calls, this.sos_lockscreen, this.updates, this.update_frequency});
+
+  factory Settings.fromJson(Map<String, dynamic> json) {
+    return Settings(
+      sos_sms: json['sos_sms'],
+      sos_calls: json['sos_calls'],
+      sos_lockscreen: json['sos_lockscreen'],
+      updates: json['updates'],
+      update_frequency: json['update_frequency'],
+    );
+  }
+  
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["sos_sms"] = sos_sms;
+    map["sos_calls"] = sos_calls;
+    map["sos_lockscreen"] = sos_lockscreen;
+    map["updates"] = updates;
+    map["update_frequency"] = update_frequency;
+
+    return map;
+  }
+}
+
 Future<void> callLocator(List<Detail> data) async {
   var url =
       "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
@@ -194,6 +417,7 @@ class Detail {
 
   Map toMap() {
     var map = new Map<String, dynamic>();
+    
     map["location"] = location;
     map["name"] = name;
     map["open"] = open;
@@ -202,3 +426,4 @@ class Detail {
     return map;
   }
 }
+
