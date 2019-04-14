@@ -14,7 +14,7 @@ mixin ProfileModel on Model {
   // Return true once request has been fulfilled
   // signals FutureBuilder to build
   Future<bool> getProfileInfo() async {
-    var info = await getLockscreenInfo();
+    var info = await getProfile();
     _first_name = info.first_name;
     _last_name = info.last_name;
     _blood_type = info.blood_type;

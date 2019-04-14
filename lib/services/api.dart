@@ -309,7 +309,7 @@ class Profile {
       last_name: json['last_name'],
       blood_type: json['blood_type'],
       age: json['age'],
-      primary_residence: json['primary_residence'],
+      //primary_residence: json['primary_residence'],
       phone_pin: json['phone_pin'],
       email_address: json['email_address'],
       phone_number: json['phone_number'],
@@ -322,7 +322,7 @@ class Profile {
     map["last_name"] = last_name;
     map["blood_type"] = blood_type;
     map["age"] = age;
-    map["primary_residence"] = primary_residence;
+    //map["primary_residence"] = primary_residence;
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;
