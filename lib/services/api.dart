@@ -221,6 +221,35 @@ void updateContactTier(phone_number, new_tier) async {
   }
 }
 
+Future<void> callLocator(List<Detail> data) async {
+  var url =
+      "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+    "current_location": [-31.9517231, 115.8603252]
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    // And store it in the data object created by ServiceLocatorPageState
+    return fromJson(json.decode(response.body), data);
+  } else {
+    // If the call was not successful, notify user of error code
+    print("callLocator request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+void fromJson(List<dynamic> jsonList, List<Detail> data) {
+  for (var i = 0; i < jsonList.length; i++) {
+    data.add(Detail.fromJson(jsonList[i]));
+  }
+}
+
 class Post {
   final String userId;
   final int type;
@@ -366,35 +395,6 @@ class Settings {
     map["update_frequency"] = update_frequency;
 
     return map;
-  }
-}
-
-Future<void> callLocator(List<Detail> data) async {
-  var url =
-      "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/locate";
-  Map<String, String> headers = {
-    'Content-Type': 'application/json',
-  };
-  var body = jsonEncode({
-    "current_location": [-31.9517231, 115.8603252]
-  });
-
-  final response = await http.post(url, headers: headers, body: body);
-  print(json.decode(response.body));
-
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    // And store it in the data object created by ServiceLocatorPageState
-    return fromJson(json.decode(response.body), data);
-  } else {
-    // If the call was not successful, notify user of error code
-    print("callLocator request failed. Error Code: ${response.statusCode}");
-  }
-}
-
-void fromJson(List<dynamic> jsonList, List<Detail> data) {
-  for (var i = 0; i < jsonList.length; i++) {
-    data.add(Detail.fromJson(jsonList[i]));
   }
 }
 

@@ -28,6 +28,22 @@ mixin ContactsModel on Model {
     _contacts = await retrieveContacts();
     // Update local tier map with new contacts and set their tier to "unregistered"
     _contacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
+    // Update contacts list according to current tier filters
+    List<Contact> _contactsList = _contacts.toList();
+    if(!_showUnregistered){
+      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 0);
+    }
+    if(!_showTier1){
+      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 1);
+    }
+    if(!_showTier2){
+      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 2);
+    }
+    if(!_showTier3){
+      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 3);
+    }
+    _contacts = _contactsList;
+
     return true;
   }
 
