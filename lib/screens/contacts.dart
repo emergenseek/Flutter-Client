@@ -39,6 +39,7 @@ class _ContactsPageState extends State<ContactsPage> {
               tooltip: 'Refresh Contacts',
               onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
             ),
+            /*
             IconButton(
               icon: Icon(Icons.settings),
               tooltip: 'Settings',
@@ -48,7 +49,7 @@ class _ContactsPageState extends State<ContactsPage> {
                     MaterialPageRoute(
                         builder: (context) => SettingsContacts()));
               },
-            )
+            )*/
           ],
         ),
         body: new FutureBuilder(
@@ -89,7 +90,7 @@ class ContactListItem extends ListTile {
       : super(
             title: Text(contact.displayName),
             subtitle: Text(contact.phones.first.value),
-            trailing: Text("Tier: " + tierMap[contact.identifier].toString()),
+            trailing: tierMap[contact.identifier] != 0 ? Text("Tier: " + tierMap[contact.identifier].toString()) : Text("Unregistered"),
             leading: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blue[200],
@@ -113,7 +114,7 @@ void showTiers(BuildContext context, Contact contact) {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       new Text(
-                        "Add this contact to an alert tier",
+                        "Register/Change this contact's alert tier",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 25.0),
                       ),

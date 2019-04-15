@@ -27,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           title: Text("Profile"),
           actions: <Widget>[
+            /*
             IconButton(
               icon: Icon(Icons.settings),
               tooltip: 'Settings',
@@ -34,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SettingsProfile()));
               },
-            )
+            )*/
           ],
         ),
         body: new FutureBuilder(
@@ -89,7 +90,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) {
+                  model.setFirstName(value.split(" ")[0]);
+                  model.setLastName(value.split(" ")[1]);
+                }
               ),
               new TextFormField(
                 maxLines: 1,
@@ -103,11 +107,21 @@ class _ProfilePageState extends State<ProfilePage> {
                       Icons.home,
                       color: Colors.blue[200],
                     )),
+                initialValue: model.getPrimaryResidence()["line1"] + ' ' +
+                    model.getPrimaryResidence()["line2"] + ', ' +
+                    model.getPrimaryResidence()["city"] + ' ' +
+                    model.getPrimaryResidence()["state"],
                 validator: (value) =>
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) {
+                  //TODO: Parse each component of the address
+                  /*
+                  Map newAddress = Map<dynamic, dynamic>();
+                  model.setPrimaryResidence(newAddress);
+                  */
+                },
               ),
               new TextFormField(
                 maxLines: 1,
@@ -126,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) => model.setAge(int.parse(value)),
               ),
               new TextFormField(
                 maxLines: 1,
@@ -145,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) => model.setBloodType(value),
               ),
               new TextFormField(
                 maxLines: 1,
@@ -164,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) => model.setEmail(value),
               ),
               new TextFormField(
                 maxLines: 1,
@@ -183,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 value.isEmpty
                     ? 'Name can\'t be empty'
                     : null,
-                //onSaved: (value) => _email = value,
+                onSaved: (value) => model.setPhoneNumber(value),
               ),
               new Padding(
                   padding: EdgeInsets.all(10.0)
@@ -198,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     profile["last_name"] = model.getLastName();
                     profile["blood_type"] = model.getBloodType();
                     profile["age"] = model.getAge();
-                    //profile["primary_residence"] = primary_residence;
+                    profile["primary_residence"] = model.getPrimaryResidence();
                     profile["phone_pin"] = model.getPhonePin();
                     profile["email_address"] = model.getEmail();
                     profile["phone_number"] = model.getPhoneNumber();

@@ -283,7 +283,7 @@ class LockscreenInfo {
   final String last_name;
   final String blood_type;
   final int age;
-  final Map<String, String> primary_residence;
+  final Map<dynamic, dynamic> primary_residence;
   final int phone_pin;
   final String email_address;
   final String phone_number;
@@ -304,7 +304,7 @@ class LockscreenInfo {
       last_name: json['last_name'],
       blood_type: json['blood_type'],
       age: json['age'],
-      //primary_residence: json['primary_residence'],
+      primary_residence: json['primary_residence'],
       phone_pin: json['phone_pin'],
       email_address: json['email_address'],
       phone_number: json['phone_number'],
@@ -317,7 +317,7 @@ class LockscreenInfo {
     map["last_name"] = last_name;
     map["blood_type"] = blood_type;
     map["age"] = age;
-    //map["primary_residence"] = primary_residence;
+    map["primary_residence"] = primary_residence;
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;
@@ -331,12 +331,13 @@ class Profile {
   final String last_name;
   final String blood_type;
   final int age;
-  final Map<String, String> primary_residence;
+  final Iterable<dynamic> contacts;
+  final Map<dynamic, dynamic> primary_residence;
   final int phone_pin;
   final String email_address;
   final String phone_number;
 
-  Profile({this.first_name, this.last_name, this.blood_type, this.age,
+  Profile({this.first_name, this.last_name, this.blood_type, this.age, this.contacts,
     this.primary_residence, this.phone_pin, this.email_address, this.phone_number});
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -345,7 +346,8 @@ class Profile {
       last_name: json['last_name'],
       blood_type: json['blood_type'],
       age: json['age'],
-      //primary_residence: json['primary_residence'],
+      contacts: json['contacts'],
+      primary_residence: json['primary_residence'],
       phone_pin: json['phone_pin'],
       email_address: json['email_address'],
       phone_number: json['phone_number'],
@@ -358,7 +360,8 @@ class Profile {
     map["last_name"] = last_name;
     map["blood_type"] = blood_type;
     map["age"] = age;
-    //map["primary_residence"] = primary_residence;
+    map["contacts"] = contacts;
+    map["primary_residence"] = primary_residence;
     map["phone_pin"] = phone_pin;
     map["email_address"] = email_address;
     map["phone_number"] = phone_number;

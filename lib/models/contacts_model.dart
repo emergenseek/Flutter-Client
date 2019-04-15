@@ -26,6 +26,10 @@ mixin ContactsModel on Model {
   Future<bool> refreshContacts() async {
     // Retrieve contacts from device
     _contacts = await retrieveContacts();
+    // Retrieve registered contact data
+    var profile = await api.getProfile();
+    Iterable<dynamic> registeredContacts = profile.contacts;
+    //TODO: Combine device & registered contact data
     // Update local tier map with new contacts and set their tier to "unregistered"
     _contacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
     // Update contacts list according to current tier filters
