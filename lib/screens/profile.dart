@@ -69,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   radius: 70.0,
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.blue[200],
-                  child: Text("DF", style: new TextStyle(fontSize: 65.0))),
+                  child: Text(model.getFirstName()[0] + model.getLastName()[0], style: new TextStyle(fontSize: 65.0))),
               new Padding(
                   padding: EdgeInsets.all(18.0)
               ),

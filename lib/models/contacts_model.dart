@@ -4,18 +4,28 @@ import 'package:EmergenSeek/services/contact_services.dart';
 import 'package:EmergenSeek/services/api.dart' as api;
 
 mixin ContactsModel on Model {
-  Iterable<Contact> _contacts;
+  Iterable<Contact> _deviceContacts;
+  Iterable<dynamic> _registeredContacts;
   Map<String, int> tierMap = new Map<String, int>();
+
   bool _showUnregistered = true;
   bool _showTier1 = true;
   bool _showTier2 = true;
   bool _showTier3 = true;
 
-  Iterable<Contact> getContacts() {
+  // Retrieves contacts stored on the device
+  Iterable<Contact> getDeviceContacts() {
     refreshContacts();
-    return _contacts;
+    return _deviceContacts;
   }
 
+  // Retrieves contacts registered in the backend
+  Iterable<dynamic> getRegisteredContacts() {
+    refreshContacts();
+    return _registeredContacts;
+  }
+
+  // Retrieves tier map for device contacts
   Map<String, int> getContactTiers() {
     refreshContacts();
     return tierMap;
@@ -25,15 +35,16 @@ mixin ContactsModel on Model {
   // signals FutureBuilder to build
   Future<bool> refreshContacts() async {
     // Retrieve contacts from device
-    _contacts = await retrieveContacts();
-    // Retrieve registered contact data
+    _deviceContacts = await retrieveContacts();
+    // Retrieve registered contact data from DB
     var profile = await api.getProfile();
-    Iterable<dynamic> registeredContacts = profile.contacts;
-    //TODO: Combine device & registered contact data
+    _registeredContacts = profile.contacts;
+
     // Update local tier map with new contacts and set their tier to "unregistered"
-    _contacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
-    // Update contacts list according to current tier filters
-    List<Contact> _contactsList = _contacts.toList();
+    _deviceContacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
+
+    // Update device contacts list according to current tier filters
+    List<Contact> _contactsList = _deviceContacts.toList();
     if(!_showUnregistered){
       _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 0);
     }
@@ -46,7 +57,23 @@ mixin ContactsModel on Model {
     if(!_showTier3){
       _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 3);
     }
-    _contacts = _contactsList;
+    _deviceContacts = _contactsList;
+
+    // Update registered contacts list according to current tier filters
+    List<dynamic> _registeredContactsList = _registeredContacts.toList();
+    if(!_showUnregistered){
+      _registeredContactsList.removeWhere((contact) => contact["tier"] == 0);
+    }
+    if(!_showTier1){
+      _registeredContactsList.removeWhere((contact) => contact["tier"] == 1);
+    }
+    if(!_showTier2){
+      _registeredContactsList.removeWhere((contact) => contact["tier"] == 2);
+    }
+    if(!_showTier3){
+      _registeredContactsList.removeWhere((contact) => contact["tier"] == 3);
+    }
+    _registeredContacts = _registeredContactsList;
 
     return true;
   }
