@@ -15,6 +15,7 @@ mixin SOSModel on Model {
   bool _sendCalls = true;
   EmergencyTier _emergencyTier = EmergencyTier.MILD;
   Notifications _notifications = new Notifications();
+  String _policeNumber;
 
   bool getSOSStatus() {
     return _sosActive;
@@ -31,6 +32,9 @@ mixin SOSModel on Model {
   bool getSendCalls() {
     return _sendCalls;
   }
+  String getPoliceNumber() {
+    return _policeNumber;
+  }
 
   void setEmergencyTier(String severity){
     switch(severity){
@@ -46,6 +50,10 @@ mixin SOSModel on Model {
   Future activateSOS() async {
     _sosActive = true;
     List coordinates = await pollCurrentLocation();
+
+    // Retrieve contact info for police using location
+    var emergencyInfo = await getEmergencyInfo(coordinates);
+    _policeNumber = emergencyInfo.police;
 
     // Display local notification
     _notifications.displaySOSNotification();

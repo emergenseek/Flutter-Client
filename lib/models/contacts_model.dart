@@ -79,8 +79,9 @@ mixin ContactsModel on Model {
   }
 
   void addNewContact(Contact contact, tier){
-    String firstName = contact.displayName[0];
-    String lastName = contact.displayName[1];
+    Iterable<String> name = contact.displayName.split(" ");
+    String firstName = name.elementAt(0);
+    String lastName = name.elementAt(1);
     String phoneNumber = contact.phones.first.value;
     // Register contact info with backend
     api.addNewContact(phoneNumber, "sister", firstName, lastName, "test_email", tier);
@@ -88,12 +89,13 @@ mixin ContactsModel on Model {
     tierMap[contact.identifier] = tier;
   }
 
-  void updateTier(Contact contact, tier) {
-    String phoneNumber = contact.phones.first.value;
+  void updateTier(dynamic contact, tier) {
+    //String phoneNumber = contact.phones.first.value;
+    String phoneNumber = contact["phone_number"];
     // Update contact tier with backend
     api.updateContactTier(phoneNumber, tier);
     // Update local tier map with new contact tier
-    tierMap[contact.identifier] = tier;
+    //tierMap[contact.identifier] = tier;
   }
 
   bool getShowUnregistered() {return _showUnregistered;}

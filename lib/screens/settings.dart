@@ -206,6 +206,7 @@ class SettingsSOSState extends State<SettingsSOS> {
                         model.toggleDisplayLockscreenInfo();
                       },
                     ),
+                    /*
                     CheckboxListTile(
                       title: Text("Notify Nearby Users"),
                       subtitle: Text(
@@ -217,7 +218,7 @@ class SettingsSOSState extends State<SettingsSOS> {
                       onChanged: (value) {
                         model.toggleNotifyUsers();
                       },
-                    ),
+                    ),*/
                   ],
                 ))));
   }

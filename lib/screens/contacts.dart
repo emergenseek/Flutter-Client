@@ -117,7 +117,7 @@ class DeviceContactListItem extends ListTile {
                 foregroundColor: Colors.blue[200],
                 child: Text(contact.displayName[0])),
             onTap: () {
-              showTiers(context, contact);
+              showTiers(context, contact, false);
             });
 }
 
@@ -127,18 +127,18 @@ class RegisteredContactListItem extends ListTile {
       : super(
       title: Text(contact["first_name"] + ' ' + contact["last_name"]),
       subtitle: Text(contact["phone_number"]),
-      trailing: Text(contact["tier"].toString()),
+      trailing: Text("Tier: " + contact["tier"].toString()),
       leading: CircleAvatar(
           backgroundColor: Colors.white,
           foregroundColor: Colors.blue[200],
           child: Text(contact["first_name"][0])),
       onTap: () {
-        showTiers(context, contact);
+        showTiers(context, contact, true);
       });
 }
 
 // Dialog box for adding contacts to an alert tier
-void showTiers(BuildContext context, Contact contact) {
+void showTiers(BuildContext context, dynamic contact, bool isRegistered) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -163,8 +163,12 @@ void showTiers(BuildContext context, Contact contact) {
                         children: <Widget>[
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 1);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 1);
+                                }
+                                else{
+                                  model.addNewContact(contact, 1);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -174,8 +178,12 @@ void showTiers(BuildContext context, Contact contact) {
                               )),
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 2);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 2);
+                                }
+                                else{
+                                  model.addNewContact(contact, 2);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -185,8 +193,12 @@ void showTiers(BuildContext context, Contact contact) {
                               )),
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 3);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 3);
+                                }
+                                else{
+                                  model.addNewContact(contact, 3);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(

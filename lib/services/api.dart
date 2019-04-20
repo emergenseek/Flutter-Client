@@ -49,6 +49,24 @@ Future<Post> sendCall(List coordinates) async {
   }
 }
 
+Future<EmergencyInfo> getEmergencyInfo(List coordinates) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/number/${coordinates[0]}/${coordinates[1]}";
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  final response = await http.get(url, headers: headers);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    return EmergencyInfo.fromJson(json.decode(response.body));
+  } else {
+    // If the call was not successful, notify user of error code
+    print("sendCall request failed. Error Code: ${response.statusCode}");
+  }
+}
+
 Future<LockscreenInfo> getLockscreenInfo() async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/lock";
   Map<String, String> headers = {
@@ -273,6 +291,34 @@ class Post {
     map["type"] = type;
     map["message"] = message;
     map["last_known_location"] = last_known_location;
+
+    return map;
+  }
+}
+
+class EmergencyInfo {
+  final String country_code;
+  final String police;
+  final String ambulance;
+  final String fire;
+
+  EmergencyInfo({this.country_code, this.police, this.ambulance, this.fire});
+
+  factory EmergencyInfo.fromJson(Map<String, dynamic> json) {
+    return EmergencyInfo(
+      country_code: json['country_code'],
+      police: json['police'],
+      ambulance: json['ambulance'],
+      fire: json['fire'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["country_code"] = country_code;
+    map["police"] = police;
+    map["ambulance"] = ambulance;
+    map["fire"] = fire;
 
     return map;
   }
