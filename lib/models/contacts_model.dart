@@ -4,6 +4,8 @@ import 'package:EmergenSeek/services/contact_services.dart';
 import 'package:EmergenSeek/services/api.dart' as api;
 
 mixin ContactsModel on Model {
+  String _userId;
+
   Iterable<Contact> _deviceContacts;
   Iterable<dynamic> _registeredContacts;
   Map<String, int> tierMap = new Map<String, int>();
@@ -37,7 +39,7 @@ mixin ContactsModel on Model {
     // Retrieve contacts from device
     _deviceContacts = await retrieveContacts();
     // Retrieve registered contact data from DB
-    var profile = await api.getProfile();
+    var profile = await api.getProfile(_userId);
     _registeredContacts = profile.contacts;
 
     // Update local tier map with new contacts and set their tier to "unregistered"
@@ -102,6 +104,8 @@ mixin ContactsModel on Model {
   bool getShowTier1() {return _showTier1;}
   bool getShowTier2() {return _showTier2;}
   bool getShowTier3() {return _showTier3;}
+
+  setContactsUserId(String newUserId) { _userId = newUserId; }
 
   void toggleUnregistered() {_showUnregistered = !_showUnregistered;}
   void toggleTier1() {_showTier1 = !_showTier1;}

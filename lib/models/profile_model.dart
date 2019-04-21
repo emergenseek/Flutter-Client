@@ -2,6 +2,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/api.dart';
 
 mixin ProfileModel on Model {
+  String _userId;
   String _first_name;
   String _last_name;
   String _blood_type;
@@ -14,7 +15,7 @@ mixin ProfileModel on Model {
   // Return true once request has been fulfilled
   // signals FutureBuilder to build
   Future<bool> getProfileInfo() async {
-    var info = await getProfile();
+    var info = await getProfile(_userId);
     _first_name = info.first_name;
     _last_name = info.last_name;
     _blood_type = info.blood_type;
@@ -35,6 +36,8 @@ mixin ProfileModel on Model {
   getPhonePin() { return _phone_pin; }
   getEmail() { return _email_address; }
   getPhoneNumber() { return _phone_number; }
+
+  setProfileUserId(String newUserId) { _userId = newUserId; }
 
   setFirstName(String newFirstName) { _first_name = newFirstName; }
   setLastName(String newLastName) { _last_name = newLastName; }

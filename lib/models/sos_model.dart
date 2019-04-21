@@ -8,6 +8,8 @@ enum EmergencyTier { MILD, SEVERE }
 
 // Model representing state data for the SOS feature
 mixin SOSModel on Model {
+  String _userId;
+
   bool _notifyUsers = false;
   bool _showLockscreenInfo = true;
   bool _sosActive = false;
@@ -35,6 +37,8 @@ mixin SOSModel on Model {
   String getPoliceNumber() {
     return _policeNumber;
   }
+
+  setSOSUserId(String newUserId) { _userId = newUserId; }
 
   void setEmergencyTier(String severity){
     switch(severity){

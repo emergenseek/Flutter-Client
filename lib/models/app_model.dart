@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:EmergenSeek/services/api.dart';
 import 'package:EmergenSeek/services/auth.dart';
 import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
@@ -29,6 +30,9 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
 
   void setUserId(String userId){
     this.userId = userId;
+    setContactsUserId(userId);
+    setSOSUserId(userId);
+    setProfileUserId(userId);
   }
 
   BaseAuth getAuth(){
@@ -58,5 +62,15 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
 
   List getCurrentLocation() {
     return currentLocation;
+  }
+
+  Future<bool> checkForUser() async {
+    var profile = await getProfile(userId);
+    if(profile == null) return false;
+    else return true;
+  }
+
+  void createNewUser(Map<String, dynamic> profile){
+    createUser(profile);
   }
 }

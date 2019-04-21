@@ -206,19 +206,6 @@ class SettingsSOSState extends State<SettingsSOS> {
                         model.toggleDisplayLockscreenInfo();
                       },
                     ),
-                    /*
-                    CheckboxListTile(
-                      title: Text("Notify Nearby Users"),
-                      subtitle: Text(
-                          "Enable to broadcast nearby EmergenSeek users"
-                          " of your SOS alerts",
-                          style: TextStyle(fontSize: 11.0)),
-                      activeColor: Colors.blue[200],
-                      value: model.getNotifyUsers(),
-                      onChanged: (value) {
-                        model.toggleNotifyUsers();
-                      },
-                    ),*/
                   ],
                 ))));
   }

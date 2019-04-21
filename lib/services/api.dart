@@ -95,7 +95,6 @@ void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequenc
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    //"user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
     "sos_sms": sos_sms,
     "sos_calls": sos_calls,
     "sos_lockscreen": sos_lockscreen,
@@ -107,8 +106,6 @@ void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequenc
   print(json.decode(response.body));
 
   if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    //return LockscreenInfo.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
     print("updateSettings request failed. Error Code: ${response.statusCode}");
@@ -134,9 +131,43 @@ Future<Settings> getSettings() async {
   }
 }
 
-Future<Profile> getProfile() async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+void createUser(Map<String, dynamic> profile) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/create";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  var body = jsonEncode({
+    "user_id": profile["user_id"],
+    "first_name": profile["first_name"],
+    "last_name": profile["last_name"],
+    "blood_type": profile["blood_type"],
+    "age": profile["age"],
+    "primary_residence": {
+      "city": "Lubbock",
+      "country": "United States of America",
+      "line1": "3138 4th St",
+      "line2": "Apt 101",
+      "state": "Texas",
+      "zip_code": "79415"
+    },
+    "phone_pin": profile["phone_pin"],
+    "email_address": profile["email_address"],
+    "phone_number": profile["phone_number"],
+  });
+
+  final response = await http.put(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if (response.statusCode == 200) {
+  } else {
+    // If the call was not successful, notify user of error code
+    print("createUser request failed. Error Code: ${response.statusCode}");
+  }
+}
+
+Future<Profile> getProfile(String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/${uid}";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -150,6 +181,7 @@ Future<Profile> getProfile() async {
   } else {
     // If the call was not successful, notify user of error code
     print("getProfile request failed. Error Code: ${response.statusCode}");
+    return null;
   }
 }
 
@@ -181,8 +213,6 @@ void updateProfile(Map<String, dynamic> profile) async {
   print(json.decode(response.body));
 
   if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    //return LockscreenInfo.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
     print("updateProfile request failed. Error Code: ${response.statusCode}");
@@ -208,8 +238,6 @@ void addNewContact(phone_number, relationship, first_name, last_name, email_addr
   print(json.decode(response.body));
 
   if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    //return Settings.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
     print("addNewContact request failed. Error Code: ${response.statusCode}");
@@ -231,8 +259,6 @@ void updateContactTier(phone_number, new_tier) async {
   print(json.decode(response.body));
 
   if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    //return Settings.fromJson(json.decode(response.body));
   } else {
     // If the call was not successful, notify user of error code
     print("updateContactTier request failed. Error Code: ${response.statusCode}");
