@@ -79,15 +79,19 @@ class _ContactsPageState extends State<ContactsPage> {
   List<Widget> buildContactsList(Iterable<Contact> deviceContacts,
       Iterable<dynamic> registeredContacts, Map<String, int> tierMap, BuildContext context) {
     List<dynamic> list = new List<dynamic>();
-    List<dynamic> deviceList = deviceContacts.map((contact) => DeviceContactListItem(contact, tierMap, context))
-        .toList();
-    list.addAll(deviceList);
+
+    if(deviceContacts != null){
+      List<dynamic> deviceList = deviceContacts.map((contact) => DeviceContactListItem(contact, tierMap, context))
+          .toList();
+      list.addAll(deviceList);
+    }
 
     if(registeredContacts != null){
       List<dynamic> registeredList = registeredContacts.map((contact) => RegisteredContactListItem(contact, context))
           .toList();
       list.addAll(registeredList);
     }
+
     return list.cast<Widget>();
   }
   // Constructs and returns list of device contacts formatted as list tiles

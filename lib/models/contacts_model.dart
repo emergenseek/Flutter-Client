@@ -42,40 +42,44 @@ mixin ContactsModel on Model {
     var profile = await api.getProfile(_userId);
     _registeredContacts = profile.contacts;
 
-    // Update local tier map with new contacts and set their tier to "unregistered"
-    _deviceContacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
+    if(_deviceContacts != null){
+      // Update local tier map with new contacts and set their tier to "unregistered"
+      _deviceContacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
 
-    // Update device contacts list according to current tier filters
-    List<Contact> _contactsList = _deviceContacts.toList();
-    if(!_showUnregistered){
-      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 0);
+      // Update device contacts list according to current tier filters
+      List<Contact> _contactsList = _deviceContacts.toList();
+      if(!_showUnregistered){
+        _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 0);
+      }
+      if(!_showTier1){
+        _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 1);
+      }
+      if(!_showTier2){
+        _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 2);
+      }
+      if(!_showTier3){
+        _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 3);
+      }
+      _deviceContacts = _contactsList;
     }
-    if(!_showTier1){
-      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 1);
-    }
-    if(!_showTier2){
-      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 2);
-    }
-    if(!_showTier3){
-      _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 3);
-    }
-    _deviceContacts = _contactsList;
 
-    // Update registered contacts list according to current tier filters
-    List<dynamic> _registeredContactsList = _registeredContacts.toList();
-    if(!_showUnregistered){
-      _registeredContactsList.removeWhere((contact) => contact["tier"] == 0);
+    if(_registeredContacts != null){
+      // Update registered contacts list according to current tier filters
+      List<dynamic> _registeredContactsList = _registeredContacts.toList();
+      if(!_showUnregistered){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 0);
+      }
+      if(!_showTier1){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 1);
+      }
+      if(!_showTier2){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 2);
+      }
+      if(!_showTier3){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 3);
+      }
+      _registeredContacts = _registeredContactsList;
     }
-    if(!_showTier1){
-      _registeredContactsList.removeWhere((contact) => contact["tier"] == 1);
-    }
-    if(!_showTier2){
-      _registeredContactsList.removeWhere((contact) => contact["tier"] == 2);
-    }
-    if(!_showTier3){
-      _registeredContactsList.removeWhere((contact) => contact["tier"] == 3);
-    }
-    _registeredContacts = _registeredContactsList;
 
     return true;
   }
