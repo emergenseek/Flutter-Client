@@ -64,10 +64,10 @@ mixin SOSModel on Model {
 
     // Send API requests according to severity
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
-      sendCall(coordinates);
+      sendCall(coordinates, _userId);
     }
     if(_sendTexts == true){
-      _emergencyTier == EmergencyTier.SEVERE ? sendSMS(coordinates, 1) : sendSMS(coordinates, 2);
+      _emergencyTier == EmergencyTier.SEVERE ? sendSMS(coordinates, 1, _userId) : sendSMS(coordinates, 2, _userId);
     }
 
     // Display personal info as a notification if user has enabled it
@@ -87,7 +87,7 @@ mixin SOSModel on Model {
   }
 
   Future displayInfo() async {
-    var info = await getLockscreenInfo();
+    var info = await getLockscreenInfo(_userId);
     _notifications.displayLockscreenNotification(info.first_name, info.last_name, info.blood_type, info.age);
   }
 

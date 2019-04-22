@@ -19,6 +19,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _formKey2 = new GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -61,7 +63,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _showProfileForm() {
-    final _formKey = new GlobalKey<FormState>();
     return ScopedModelDescendant < AppModel > (
         builder: (context, child, model) => Container(
             padding: const EdgeInsets.fromLTRB(35.0, 50.0, 60.0, 20.0),
@@ -75,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.all(18.0)
               ),
               Form(
-                key: _formKey,
+                key: _formKey2,
                 child: Column(
                   children: <Widget>[
                     new TextFormField(
@@ -215,8 +216,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Theme.of(context).accentColor,
                   splashColor: Colors.blueGrey,
                   onPressed: () {
-                    if(_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
+                    if(_formKey2.currentState.validate()) {
+                      _formKey2.currentState.save();
 
                       Map<String, dynamic> profile = new Map<String, dynamic>();
                       profile["first_name"] = model.getFirstName();

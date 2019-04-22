@@ -3,13 +3,13 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<Post> sendSMS(List coordinates, int alertType) async {
+Future<Post> sendSMS(List coordinates, int alertType, String uid) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
   Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "user_id": uid,
     "type": alertType,  // 1 = Severe, 2 = Mild, 3 = Check In
     "message": "This is an SOS Emergency Alert from EmergenSeek",
     "last_known_location": coordinates,
@@ -27,13 +27,13 @@ Future<Post> sendSMS(List coordinates, int alertType) async {
   }
 }
 
-Future<Post> sendCall(List coordinates) async {
+Future<Post> sendCall(List coordinates, String uid) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
   Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "user_id": uid,
     "last_known_location": coordinates
   });
 
@@ -67,13 +67,13 @@ Future<EmergencyInfo> getEmergencyInfo(List coordinates) async {
   }
 }
 
-Future<LockscreenInfo> getLockscreenInfo() async {
+Future<LockscreenInfo> getLockscreenInfo(String uid) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/lock";
   Map<String, String> headers = {
     'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-    "user_id": "b945b2f7-8970-4a14-834f-c3e8bcd1928b",
+    "user_id": uid,
   });
 
   final response = await http.post(url, headers: headers, body: body);
@@ -88,9 +88,8 @@ Future<LockscreenInfo> getLockscreenInfo() async {
   }
 }
 
-void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequency) async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequency, String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -112,9 +111,8 @@ void updateSettings(sos_sms, sos_calls, sos_lockscreen, updates, update_frequenc
   }
 }
 
-Future<Settings> getSettings() async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+Future<Settings> getSettings(String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/settings/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -167,7 +165,7 @@ void createUser(Map<String, dynamic> profile) async {
 }
 
 Future<Profile> getProfile(String uid) async {
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/${uid}";
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -185,9 +183,8 @@ Future<Profile> getProfile(String uid) async {
   }
 }
 
-void updateProfile(Map<String, dynamic> profile) async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+void updateProfile(Map<String, dynamic> profile, String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/profile/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -219,9 +216,8 @@ void updateProfile(Map<String, dynamic> profile) async {
   }
 }
 
-void addNewContact(phone_number, relationship, first_name, last_name, email_address, tier) async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/contact/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+void addNewContact(phone_number, relationship, first_name, last_name, email_address, tier, String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/contact/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
@@ -244,9 +240,8 @@ void addNewContact(phone_number, relationship, first_name, last_name, email_addr
   }
 }
 
-void updateContactTier(phone_number, new_tier) async {
-  //TODO: Update url to dynamically use the user's UID
-  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/tier/b945b2f7-8970-4a14-834f-c3e8bcd1928b";
+void updateContactTier(phone_number, new_tier, String uid) async {
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/tier/$uid";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };

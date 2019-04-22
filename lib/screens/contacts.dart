@@ -82,6 +82,7 @@ class _ContactsPageState extends State<ContactsPage> {
     List<dynamic> deviceList = deviceContacts.map((contact) => DeviceContactListItem(contact, tierMap, context))
         .toList();
     list.addAll(deviceList);
+
     if(registeredContacts != null){
       List<dynamic> registeredList = registeredContacts.map((contact) => RegisteredContactListItem(contact, context))
           .toList();

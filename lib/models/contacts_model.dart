@@ -86,7 +86,7 @@ mixin ContactsModel on Model {
     String lastName = name.elementAt(1);
     String phoneNumber = contact.phones.first.value;
     // Register contact info with backend
-    api.addNewContact(phoneNumber, "sister", firstName, lastName, "test_email", tier);
+    api.addNewContact(phoneNumber, "sister", firstName, lastName, "test_email", tier, _userId);
     // Update local tier map with new contact tier
     tierMap[contact.identifier] = tier;
   }
@@ -95,7 +95,7 @@ mixin ContactsModel on Model {
     //String phoneNumber = contact.phones.first.value;
     String phoneNumber = contact["phone_number"];
     // Update contact tier with backend
-    api.updateContactTier(phoneNumber, tier);
+    api.updateContactTier(phoneNumber, tier, _userId);
     // Update local tier map with new contact tier
     //tierMap[contact.identifier] = tier;
   }

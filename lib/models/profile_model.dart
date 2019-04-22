@@ -3,6 +3,7 @@ import 'package:EmergenSeek/services/api.dart';
 
 mixin ProfileModel on Model {
   String _userId;
+
   String _first_name;
   String _last_name;
   String _blood_type;
@@ -49,6 +50,6 @@ mixin ProfileModel on Model {
   setPhoneNumber(String newPhoneNum) { _phone_number = newPhoneNum; }
 
   updateProfileInfo(Map<String, dynamic> profile) {
-    updateProfile(profile);
+    updateProfile(profile, _userId);
   }
 }
