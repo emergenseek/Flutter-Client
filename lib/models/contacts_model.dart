@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:scoped_model/scoped_model.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:EmergenSeek/services/contact_services.dart';
@@ -9,6 +11,7 @@ mixin ContactsModel on Model {
   Iterable<Contact> _deviceContacts;
   Iterable<dynamic> _registeredContacts;
   Map<String, int> tierMap = new Map<String, int>();
+  HashMap<String, bool> registeredMap = new HashMap<String, bool>();
 
   bool _showUnregistered = true;
   bool _showTier1 = true;
@@ -42,6 +45,27 @@ mixin ContactsModel on Model {
     var profile = await api.getProfile(_userId);
     _registeredContacts = profile.contacts;
 
+    if(_registeredContacts != null){
+      // Update local registered map with registered contact phone numbers
+      _registeredContacts.forEach((contact) => registeredMap.putIfAbsent(contact["phone_number"], () => true));
+      
+      // Update registered contacts list according to current tier filters
+      List<dynamic> _registeredContactsList = _registeredContacts.toList();
+      if(!_showUnregistered){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 0);
+      }
+      if(!_showTier1){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 1);
+      }
+      if(!_showTier2){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 2);
+      }
+      if(!_showTier3){
+        _registeredContactsList.removeWhere((contact) => contact["tier"] == 3);
+      }
+      _registeredContacts = _registeredContactsList;
+    }
+
     if(_deviceContacts != null){
       // Update local tier map with new contacts and set their tier to "unregistered"
       _deviceContacts.forEach((contact) => tierMap.putIfAbsent(contact.identifier, () => 0));
@@ -60,25 +84,10 @@ mixin ContactsModel on Model {
       if(!_showTier3){
         _contactsList.removeWhere((contact) => tierMap[contact.identifier] == 3);
       }
-      _deviceContacts = _contactsList;
-    }
+      // Remove any device contacts that already exist as registered contacts
+      _contactsList.removeWhere((contact) => registeredMap.containsKey(contact.phones.first.value/*.replaceAll(RegExp(' +'), '')*/));
 
-    if(_registeredContacts != null){
-      // Update registered contacts list according to current tier filters
-      List<dynamic> _registeredContactsList = _registeredContacts.toList();
-      if(!_showUnregistered){
-        _registeredContactsList.removeWhere((contact) => contact["tier"] == 0);
-      }
-      if(!_showTier1){
-        _registeredContactsList.removeWhere((contact) => contact["tier"] == 1);
-      }
-      if(!_showTier2){
-        _registeredContactsList.removeWhere((contact) => contact["tier"] == 2);
-      }
-      if(!_showTier3){
-        _registeredContactsList.removeWhere((contact) => contact["tier"] == 3);
-      }
-      _registeredContacts = _registeredContactsList;
+      _deviceContacts = _contactsList;
     }
 
     return true;
@@ -93,6 +102,12 @@ mixin ContactsModel on Model {
     api.addNewContact(phoneNumber, "sister", firstName, lastName, "test_email", tier, _userId);
     // Update local tier map with new contact tier
     tierMap[contact.identifier] = tier;
+  }
+
+  void removeDeviceContact(Contact contact){
+    List<Contact> tempList = _deviceContacts.toList();
+    tempList.remove(contact);
+    _deviceContacts = tempList;
   }
 
   void updateTier(dynamic contact, tier) {

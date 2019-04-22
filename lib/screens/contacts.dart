@@ -173,6 +173,7 @@ void showTiers(BuildContext context, dynamic contact, bool isRegistered) {
                                 }
                                 else{
                                   model.addNewContact(contact, 1);
+                                  model.removeDeviceContact(contact);
                                 }
                                 Navigator.of(context).pop();
                               },

@@ -119,9 +119,12 @@ class _RootPageState extends State<RootPage> {
                     onSignedOut: _onSignedOut,
                   );
                 }
-                else {
+                else{
                   return _buildWaitingScreen();
                 }
+              }
+              else{
+                return _buildWaitingScreen();
               }
             });
           break;
