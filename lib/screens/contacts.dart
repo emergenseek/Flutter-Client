@@ -39,6 +39,7 @@ class _ContactsPageState extends State<ContactsPage> {
               tooltip: 'Refresh Contacts',
               onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
             ),
+            /*
             IconButton(
               icon: Icon(Icons.settings),
               tooltip: 'Settings',
@@ -48,7 +49,7 @@ class _ContactsPageState extends State<ContactsPage> {
                     MaterialPageRoute(
                         builder: (context) => SettingsContacts()));
               },
-            )
+            )*/
           ],
         ),
         body: new FutureBuilder(
@@ -61,7 +62,7 @@ class _ContactsPageState extends State<ContactsPage> {
                       iconColor: Colors.blue[200],
                       child: ListView(
                         children:
-                            buildContactList(model.getContacts(), model.getContactTiers(), context),
+                            buildContactsList(model.getDeviceContacts(), model.getRegisteredContacts(), model.getContactTiers(), context),
                       )));
             } else {
               return Center(
@@ -74,33 +75,75 @@ class _ContactsPageState extends State<ContactsPage> {
         floatingActionButton: QuickSOS());
   }
 
-  // Constructs and returns list of contacts formatted as list tiles
-  List<ContactListItem> buildContactList(
+  // Constructs lists of both contact types and returns a unified list
+  List<Widget> buildContactsList(Iterable<Contact> deviceContacts,
+      Iterable<dynamic> registeredContacts, Map<String, int> tierMap, BuildContext context) {
+    List<dynamic> list = new List<dynamic>();
+
+    if(deviceContacts != null){
+      List<dynamic> deviceList = deviceContacts.map((contact) => DeviceContactListItem(contact, tierMap, context))
+          .toList();
+      list.addAll(deviceList);
+    }
+
+    if(registeredContacts != null){
+      List<dynamic> registeredList = registeredContacts.map((contact) => RegisteredContactListItem(contact, context))
+          .toList();
+      list.addAll(registeredList);
+    }
+
+    return list.cast<Widget>();
+  }
+  // Constructs and returns list of device contacts formatted as list tiles
+  List<dynamic> buildDeviceContactList(
       Iterable<Contact> contacts, Map<String, int> tierMap, BuildContext context) {
     return contacts
-        .map((contact) => ContactListItem(contact, tierMap, context))
+        .map((contact) => DeviceContactListItem(contact, tierMap, context))
+        .toList();
+  }
+  // Constructs and returns list of registered contacts formatted as list tiles
+  List<dynamic> buildRegisteredContactList(
+      Iterable<dynamic> contacts, BuildContext context) {
+    return contacts
+        .map((contact) => RegisteredContactListItem(contact, context))
         .toList();
   }
 }
 
-// List view representation of a contact
-class ContactListItem extends ListTile {
-  ContactListItem(Contact contact, Map<String, int> tierMap, BuildContext context)
+// List view representation of a device contact
+class DeviceContactListItem extends ListTile {
+  DeviceContactListItem(Contact contact, Map<String, int> tierMap, BuildContext context)
       : super(
             title: Text(contact.displayName),
             subtitle: Text(contact.phones.first.value),
-            trailing: Text("Tier: " + tierMap[contact.identifier].toString()),
+            trailing: tierMap[contact.identifier] != 0 ? Text("Tier: " + tierMap[contact.identifier].toString()) : Text("Unregistered"),
             leading: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blue[200],
                 child: Text(contact.displayName[0])),
             onTap: () {
-              showTiers(context, contact);
+              showTiers(context, contact, false);
             });
 }
 
+// List view representation of a registered contact
+class RegisteredContactListItem extends ListTile {
+  RegisteredContactListItem(dynamic contact, BuildContext context)
+      : super(
+      title: Text(contact["first_name"] + ' ' + contact["last_name"]),
+      subtitle: Text(contact["phone_number"]),
+      trailing: Text("Tier: " + contact["tier"].toString()),
+      leading: CircleAvatar(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.blue[200],
+          child: Text(contact["first_name"][0])),
+      onTap: () {
+        showTiers(context, contact, true);
+      });
+}
+
 // Dialog box for adding contacts to an alert tier
-void showTiers(BuildContext context, Contact contact) {
+void showTiers(BuildContext context, dynamic contact, bool isRegistered) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -113,7 +156,7 @@ void showTiers(BuildContext context, Contact contact) {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       new Text(
-                        "Add this contact to an alert tier",
+                        "Register/Change this contact's alert tier",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 25.0),
                       ),
@@ -125,8 +168,13 @@ void showTiers(BuildContext context, Contact contact) {
                         children: <Widget>[
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 1);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 1);
+                                }
+                                else{
+                                  model.addNewContact(contact, 1);
+                                  model.removeDeviceContact(contact);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -136,8 +184,12 @@ void showTiers(BuildContext context, Contact contact) {
                               )),
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 2);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 2);
+                                }
+                                else{
+                                  model.addNewContact(contact, 2);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -147,8 +199,12 @@ void showTiers(BuildContext context, Contact contact) {
                               )),
                           new FlatButton(
                               onPressed: () {
-                                List<String> displayName = contact.displayName.split(" ");
-                                model.addNewContact(contact, 3);
+                                if(isRegistered == true){
+                                  model.updateTier(contact, 3);
+                                }
+                                else{
+                                  model.addNewContact(contact, 3);
+                                }
                                 Navigator.of(context).pop();
                               },
                               child: new Text(
@@ -179,6 +235,7 @@ void showTiers(BuildContext context, Contact contact) {
       });
 }
 
+// Slide out menu for filtering which contact tiers to display
 class FilterMenu extends StatefulWidget {
   @override
   FilterMenuState createState() {
