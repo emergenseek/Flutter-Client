@@ -4,15 +4,14 @@ import 'package:EmergenSeek/services/auth.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
 //>>>>>>> develop
 import 'package:EmergenSeek/models/contacts_model.dart';
-
-// Model representing universal state data for the entire application
-class AppModel extends Model with SOSModel, ContactsModel {
-
 import 'package:EmergenSeek/models/lUpdates_model.dart';
 
+// Model representing universal state data for the entire application
+//class AppModel extends Model with SOSModel, ContactsModel {
+
 
 // Model representing universal state data for the entire application
-class AppModel extends Model with SOSModel, lupdatesModel {
+class AppModel extends Model with SOSModel, lupdatesModel, ContactsModel {
 //>>>>>>> location-updates
   AppModel({this.auth, this.userId, this.onSignedOut});
 

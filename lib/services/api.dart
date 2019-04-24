@@ -27,6 +27,52 @@ Future<Post> sendSMS(List coordinates) async {
   }
 }
 
+Future<Post> sendUpdateSMS(List coordinates) async{
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
+      Map<String,String> headers ={
+  'Content-Type': 'application/json',
+  };
+  var body = jsonEncode({
+  "user_id": "cb9c125a-ebca-4ac8-89de-e653f6b4c79e",
+  "last_known_location": coordinates,
+  "message": "EmergenSeek LocationUpdate Test",
+  "type": 3,
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if(response.statusCode != 200)
+    print("sendUpdateSMS request failed. Error Code: ${response.statusCode}");
+
+  else
+    return Post.fromJson(json.decode(response.body));
+}
+
+Future<Post> locationPolling(List coordinates) async{
+  var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/poll";
+  Map<String,String> headers = {
+    'Content-Type': 'application/json',
+  };
+
+  var body = jsonEncode({
+    "user_id": "cb9c125a-ebca-4ac8-89de-e653f6b4c79e",
+    "last_known_location": coordinates,
+    "type": 3,
+  });
+
+  final response = await http.post(url, headers: headers, body: body);
+  print(json.decode(response.body));
+
+  if(response.statusCode != 200){
+    print("location polling failed. Error Code: ${response.statusCode}");
+  }
+
+  else{
+    return Post.fromJson(json.decode(response.body));
+  }
+}
+
 Future<Post> sendCall(List coordinates) async {
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/voice";
   Map<String,String> headers = {

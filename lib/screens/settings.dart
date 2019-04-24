@@ -33,7 +33,7 @@ class SettingsHome extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SettingsLocationUpdates()));
+                            builder: (context) => LocationSettingsPage()));
                   },
                 ),
                 ListTile(
@@ -284,5 +284,61 @@ class SettingsContactsState extends State<SettingsContacts> {
                     )
               ],
             )));
+  }
+}
+
+class LocationSettingsPage extends StatefulWidget{
+  @override
+  LSettingsState createState(){
+    return new LSettingsState();
+  }
+}
+class LSettingsState extends State<LocationSettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) =>
+            Scaffold(
+                backgroundColor: Colors.blueGrey[400],
+                appBar: AppBar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    title: Text("Location Updates Settings")
+                ),
+                body: ListTileTheme(
+                    textColor: Colors.white,
+                    iconColor: Colors.blue[200],
+                    child: ListView(
+                      children: <Widget>[
+                        CheckboxListTile(
+                          title: Text("8 Hours"),
+                          //subtitle: Text("Enable to include primary contacts in location update"),
+                          activeColor: Colors.blue[200],
+
+                          value: false,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("12 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: false,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("24 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: true,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("72 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: false,
+                          onChanged: null,
+                        ),
+                      ],
+                    )
+                )
+            )
+    );
   }
 }
