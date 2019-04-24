@@ -177,9 +177,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                               " when broadcasting mild or severe SOS alerts",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getSendTexts(),//values['displayInfo'],
+                      value: model.getSendTexts(),
                       onChanged: (value) {
-                        model.toggleSendTexts();//onChanged('displayInfo');
+                        model.toggleSendTexts();
                       },
                     ),
                     CheckboxListTile(
@@ -189,9 +189,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                               " when broadcasting severe SOS alerts",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getSendCalls(),//values['displayInfo'],
+                      value: model.getSendCalls(),
                       onChanged: (value) {
-                        model.toggleSendCalls();//onChanged('displayInfo');
+                        model.toggleSendCalls();
                       },
                     ),
                     CheckboxListTile(
@@ -201,21 +201,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                           " the lockscreen after activating SOS mode",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getDisplayLockscreenInfo(),//values['displayInfo'],
+                      value: model.getDisplayLockscreenInfo(),
                       onChanged: (value) {
-                        model.toggleDisplayLockscreenInfo();//onChanged('displayInfo');
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: Text("Notify Nearby Users"),
-                      subtitle: Text(
-                          "Enable to broadcast nearby EmergenSeek users"
-                          " of your SOS alerts",
-                          style: TextStyle(fontSize: 11.0)),
-                      activeColor: Colors.blue[200],
-                      value: model.getNotifyUsers(),//values['notifyUsers'],
-                      onChanged: (value) {
-                        model.toggleNotifyUsers();//onChanged('notifyUsers');
+                        model.toggleDisplayLockscreenInfo();
                       },
                     ),
                   ],

@@ -40,13 +40,15 @@ class SOSButton extends StatelessWidget {
               children: <Widget>[
                 model.getSOSStatus() == true
                     ? ShowUp(
-                        child: Text("S.O.S. Alert Broadcasted",
+                        child: Text("S.O.S. Alert Broadcasted \n ${model.getPoliceNumber()} Has Been Contacted",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 25.0, fontWeight: FontWeight.w300)),
                         delay: 500,
                       )
                     : ShowUp(
                         child: Text("Hold To Activate S.O.S.",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 25.0, fontWeight: FontWeight.w300)),
                         delay: 500,
