@@ -61,6 +61,7 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
   }
 
   List getCurrentLocation() {
+    updateCurrentPosition();
     return currentLocation;
   }
 
