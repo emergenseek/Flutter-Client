@@ -3,6 +3,8 @@ import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/services/api.dart';
 
 mixin lupdatesModel on Model{
+  String _userId;
+
   bool _sendUpdate = false;
   bool _primaryContacts = true;
   bool _secondaryContacts = false;
@@ -11,11 +13,16 @@ mixin lupdatesModel on Model{
   String message = "Location Updates";
   bool val = true;
 
+  setUpdatesUserId(String newUserId) { _userId = newUserId; }
 
-  Future sendUpdate() async{
+  Future sendUpdate(List coordinates) async{
     _sendUpdate = true;
-    List coordinates = await getCurrentLocation();
-    sendUpdateSMS(coordinates);
+    //List coordinates = await getCurrentLocation();
+    sendUpdateSMS(coordinates, _userId);
+  }
+
+  void startLocationPolling(List coordinates){
+    locationPolling(coordinates, _userId);
   }
 
   Future lPoll(_lPolling) async {

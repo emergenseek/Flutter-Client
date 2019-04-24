@@ -27,15 +27,15 @@ Future<Post> sendSMS(List coordinates, int alertType, String uid) async {
   }
 }
 
-Future<Post> sendUpdateSMS(List coordinates) async{
+Future<Post> sendUpdateSMS(List coordinates, String uid) async{
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/sms";
       Map<String,String> headers ={
   'Content-Type': 'application/json',
   };
   var body = jsonEncode({
-  "user_id": "cb9c125a-ebca-4ac8-89de-e653f6b4c79e",
+  "user_id": uid,
   "last_known_location": coordinates,
-  "message": "EmergenSeek LocationUpdate Test",
+  "message": "EmergenSeek Location Update Test",
   "type": 3,
   });
 
@@ -49,14 +49,14 @@ Future<Post> sendUpdateSMS(List coordinates) async{
     return Post.fromJson(json.decode(response.body));
 }
 
-Future<Post> locationPolling(List coordinates) async{
+Future<Post> locationPolling(List coordinates, String uid) async{
   var url = "https://tzuvifn7ng.execute-api.us-east-2.amazonaws.com/Prod/poll";
   Map<String,String> headers = {
     'Content-Type': 'application/json',
   };
 
   var body = jsonEncode({
-    "user_id": "cb9c125a-ebca-4ac8-89de-e653f6b4c79e",
+    "user_id": uid,
     "last_known_location": coordinates,
     "type": 3,
   });

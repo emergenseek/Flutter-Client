@@ -22,14 +22,15 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
   bool val = false;
   @override
   Future<void> lPoll(bool _lPolling) async{
-    List coordinates = await getCurrentLocation();
+    List coordinates = ScopedModel.of<AppModel>(context).getCurrentLocation();
     setState((){
       if (_lPolling){
         message = "Location Polling On";
         val = true;
         _lPolling = true;
         //List coordinates = await getCurrentLocation();
-        locationPolling(coordinates);
+        //locationPolling(coordinates, );
+        ScopedModel.of<AppModel>(context).startLocationPolling(coordinates);
       }
       else{
         message = "Location Polling Off";
@@ -109,7 +110,7 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
                    //padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 23.0),
                    //new Text("Update sent"),
                    onPressed: () {
-                     model.sendUpdate();
+                     model.sendUpdate(model.getCurrentLocation());
                      updateNot();
                    }
                ),
