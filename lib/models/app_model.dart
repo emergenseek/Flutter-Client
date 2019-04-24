@@ -29,6 +29,7 @@ class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdate
 
   void setUserId(String userId){
     this.userId = userId;
+    // Update UID info in feature models
     setContactsUserId(userId);
     setSOSUserId(userId);
     setProfileUserId(userId);

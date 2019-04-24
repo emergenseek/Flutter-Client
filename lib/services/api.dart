@@ -35,7 +35,7 @@ Future<Post> sendUpdateSMS(List coordinates, String uid) async{
   var body = jsonEncode({
   "user_id": uid,
   "last_known_location": coordinates,
-  "message": "EmergenSeek Location Update Test",
+  "message": "EmergenSeek Location Check-In Test",
   "type": 3,
   });
 
@@ -65,7 +65,7 @@ Future<Post> locationPolling(List coordinates, String uid) async{
   print(json.decode(response.body));
 
   if(response.statusCode != 200){
-    print("location polling failed. Error Code: ${response.statusCode}");
+    print("locationPolling request failed. Error Code: ${response.statusCode}");
   }
 
   else{

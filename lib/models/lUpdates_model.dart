@@ -2,7 +2,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/services/api.dart';
 
-mixin lupdatesModel on Model{
+mixin lupdatesModel on Model {
   String _userId;
 
   bool _sendUpdate = false;
@@ -13,15 +13,13 @@ mixin lupdatesModel on Model{
   String message = "Location Updates";
   bool val = true;
 
-  setUpdatesUserId(String newUserId) { _userId = newUserId; }
-
-  Future sendUpdate(List coordinates) async{
+  Future sendUpdate(List coordinates) async {
     _sendUpdate = true;
     //List coordinates = await getCurrentLocation();
     sendUpdateSMS(coordinates, _userId);
   }
 
-  void startLocationPolling(List coordinates){
+  void startLocationPolling(List coordinates) {
     locationPolling(coordinates, _userId);
   }
 
@@ -30,39 +28,41 @@ mixin lupdatesModel on Model{
     if (_lPolling) {
       message = "Location Updates On";
       val = true;
-    }
-    else {
+    } else {
       message = "Location Updates Off";
       val = false;
       _lPolling = false;
     }
   }
 
-  bool getPrimaryContacts(){
+  setUpdatesUserId(String newUserId) {
+    _userId = newUserId;
+  }
+
+  bool getPrimaryContacts() {
     return _primaryContacts;
   }
 
-  bool getSecondaryContacts(){
+  bool getSecondaryContacts() {
     return _secondaryContacts;
   }
 
-  bool getTertiaryContacts(){
+  bool getTertiaryContacts() {
     return _tertiaryContacts;
   }
 
-  void togglePrimaryContacts(){
+  void togglePrimaryContacts() {
     _primaryContacts = !_primaryContacts;
     notifyListeners();
   }
 
-  void toggleSecondaryContacts(){
+  void toggleSecondaryContacts() {
     _secondaryContacts = !_secondaryContacts;
     notifyListeners();
   }
 
-  void toggleTertiaryContacts(){
+  void toggleTertiaryContacts() {
     _tertiaryContacts = !_tertiaryContacts;
     notifyListeners();
   }
-
 }
