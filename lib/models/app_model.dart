@@ -4,10 +4,8 @@ import 'package:EmergenSeek/services/api.dart';
 import 'package:EmergenSeek/services/auth.dart';
 import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
-import 'package:EmergenSeek/models/lUpdates_model.dart';
 import 'package:EmergenSeek/models/contacts_model.dart';
-import 'package:EmergenSeek/models/profile_model.dart';
-
+import 'package:EmergenSeek/models/lUpdates_model.dart';
 
 // Model representing universal state data for the entire application
 class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdatesModel {

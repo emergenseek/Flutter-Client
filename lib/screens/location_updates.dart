@@ -3,56 +3,12 @@ import 'nav_menu.dart';
 import 'sos.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:EmergenSeek/models/app_model.dart';
+//import 'package:EmergenSeek/screens/lUpdates_settings.dart';
+import 'package:EmergenSeek/screens/settings.dart';
+import 'package:EmergenSeek/services/geolocator.dart';
+import 'package:EmergenSeek/services/api.dart';
 
-/*
-class LocationUpdatesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.blueGrey,
-      drawer: NavMenu(),
-      appBar: AppBar(
-        title: Text("Location Updates"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Ink(
-              decoration : ShapeDecoration(
-                color : Colors.white70,
-                shape: CircleBorder(),
-              ),
-              child: IconButton(
-              icon: Icon(Icons.person_outline),
-                  iconSize: 250.0,
-              color: Colors.lightBlueAccent,
-              splashColor: Colors.blue,
-              highlightColor: Colors.blue,
-              onPressed: () {
-                Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => SOSPage())
-                );
-              }
-            ),
-          )
 
-          ]
-      )
-      ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'S.O.S.',
-        child: Icon(Icons.error_outline, size: 35.0),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SOSPage()));
-        },
-      ),
-
-    );
-  }
-}
-*/
 
 class LocationUpdatesPage extends StatefulWidget{
   @override
@@ -62,14 +18,45 @@ class LocationUpdatesPage extends StatefulWidget{
 }
 
 class LUpdatesSettingsState extends State<LocationUpdatesPage>{
+  String message = "Location Polling";
+  bool val = false;
   @override
+  Future<void> lPoll(bool _lPolling) async{
+    List coordinates = await getCurrentLocation();
+    setState((){
+      if (_lPolling){
+        message = "Location Polling On";
+        val = true;
+        _lPolling = true;
+        //List coordinates = await getCurrentLocation();
+        locationPolling(coordinates);
+      }
+      else{
+        message = "Location Polling Off";
+        val = false;
+        _lPolling = false;
+      }
+      });
+  }
   Widget build(BuildContext context){
    return ScopedModelDescendant<AppModel>(
      builder: (context, child, model) => Scaffold(
-       backgroundColor: Theme.of(context).accentColor,
+       backgroundColor: Colors.blueGrey[400],
        appBar: AppBar(
          backgroundColor: Theme.of(context).primaryColor,
-         title: Text("Location Updates")
+         title: Text("Location Updates"),
+
+         actions: <Widget>[
+           IconButton(
+             icon: Icon(Icons.settings),
+             onPressed: (){
+               Navigator.push(context,
+                   MaterialPageRoute(builder: (context) => LocationSettingsPage()));
+             },
+
+           )
+         ],
+
        ),
        //drawer: NavMenu(),
        body: ListTileTheme(
@@ -79,7 +66,7 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
            children: <Widget>[
              CheckboxListTile(
                title: Text("Primary Contacts"),
-               subtitle: Text("Enable to include primary contacts in location update"),
+               //subtitle: Text("Enable to include primary contacts in location update"),
                activeColor: Colors.blue[200],
                value: model.getPrimaryContacts(),
                onChanged: (value){
@@ -88,7 +75,7 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
              ),
              CheckboxListTile(
                title: Text("Secondary Contacts"),
-               subtitle: Text("Enable to include secondary contacts in location update"),
+               //subtitle: Text("Enable to include secondary contacts in location update"),
                activeColor: Colors.blue[200],
                value: model.getSecondaryContacts(),
                onChanged: (value){
@@ -97,12 +84,16 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
              ),
              CheckboxListTile(
                title: Text("Tertiary Contacts"),
-               subtitle: Text("Enable to include tertiary contacts in location update"),
+               //subtitle: Text("Enable to include tertiary contacts in location update"),
                activeColor: Colors.blue[200],
                value: model.getTertiaryContacts(),
                onChanged: (value){
                  model.toggleTertiaryContacts();
                },
+             ),
+             new Text(" Location Updated @$now",
+                 textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold)
              ),
              Ink(
                decoration : ShapeDecoration(
@@ -115,10 +106,11 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
                    color: Colors.lightBlueAccent,
                    splashColor: Colors.blue,
                    highlightColor: Colors.blue,
+                   //padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 23.0),
+                   //new Text("Update sent"),
                    onPressed: () {
-                     Navigator.push(
-                         context, MaterialPageRoute(builder: (context) => SOSPage())
-                     );
+                     model.sendUpdate();
+                     updateNot();
                    }
                ),
              ),
@@ -127,42 +119,33 @@ class LUpdatesSettingsState extends State<LocationUpdatesPage>{
        ),
        floatingActionButton: FloatingActionButton(
        tooltip: 'S.O.S.',
-       child: Icon(Icons.error_outline, size: 35.0),
+         backgroundColor: Colors.blue[200],
+       child: Icon(Icons.error_outline, size: 35.0, color: Colors.white),
        onPressed: () {
          Navigator.push(
              context, MaterialPageRoute(builder: (context) => SOSPage()));
        },
      ),
-
-     )
+       bottomNavigationBar: new ButtonBar(
+         children: <Widget>[
+           Text(message),
+           Switch(
+             value: val,
+             onChanged: (bool _lPolling) => lPoll(_lPolling),
+             activeColor: Colors.blue[200],
+           ),
+         ],
+       ),
+     ),
 
    );
   } //Widget
+var now = new DateTime(0000, 1, 1);
+void updateNot(){
+    setState(() => now = new DateTime.now());
+    //new Text ("Location Updated @ $now");
+}
 } //LUpdatesSettings
 
 
-/*
-class LUpdatesButtonState extends StatefulWidget {
-  @override
-  LUpdatesButton createState() {
-    return new LUpdatesButton();
-  }
-}
-class LUpdatesButton extends State<LUpdatesButtonState> {
-  @override
-  Widget build(BuildContext context) {
-    body: Center(
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center
-      children: <Widget>[
-        RawMaterialButton(
-
-        )
-    )
-    )
-      ]
-  }
-}
-*/
 
