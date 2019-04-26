@@ -8,6 +8,8 @@ enum EmergencyTier { MILD, SEVERE }
 
 // Model representing state data for the SOS feature
 mixin SOSModel on Model {
+  String _userId;
+
   bool _notifyUsers = false;
   bool _showLockscreenInfo = true;
   bool _sosActive = false;
@@ -15,6 +17,7 @@ mixin SOSModel on Model {
   bool _sendCalls = true;
   EmergencyTier _emergencyTier = EmergencyTier.MILD;
   Notifications _notifications = new Notifications();
+  String _policeNumber;
 
   bool getSOSStatus() {
     return _sosActive;
@@ -31,6 +34,11 @@ mixin SOSModel on Model {
   bool getSendCalls() {
     return _sendCalls;
   }
+  String getPoliceNumber() {
+    return _policeNumber;
+  }
+
+  setSOSUserId(String newUserId) { _userId = newUserId; }
 
   void setEmergencyTier(String severity){
     switch(severity){
@@ -45,17 +53,21 @@ mixin SOSModel on Model {
 
   Future activateSOS() async {
     _sosActive = true;
-    List coordinates = await getCurrentLocation();
+    List coordinates = await pollCurrentLocation();
+
+    // Retrieve contact info for police using location
+    var emergencyInfo = await getEmergencyInfo(coordinates);
+    _policeNumber = emergencyInfo.police;
 
     // Display local notification
     _notifications.displaySOSNotification();
 
     // Send API requests according to severity
     if(_emergencyTier == EmergencyTier.SEVERE && _sendCalls == true){
-      sendCall(coordinates);
+      sendCall(coordinates, _userId);
     }
     if(_sendTexts == true){
-      sendSMS(coordinates);
+      _emergencyTier == EmergencyTier.SEVERE ? sendSMS(coordinates, 1, _userId) : sendSMS(coordinates, 2, _userId);
     }
 
     // Display personal info as a notification if user has enabled it
@@ -75,7 +87,7 @@ mixin SOSModel on Model {
   }
 
   Future displayInfo() async {
-    var info = await getLockscreenInfo();
+    var info = await getLockscreenInfo(_userId);
     _notifications.displayLockscreenNotification(info.first_name, info.last_name, info.blood_type, info.age);
   }
 

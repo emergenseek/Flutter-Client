@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:EmergenSeek/services/api.dart';
 import 'package:EmergenSeek/services/auth.dart';
+import 'package:EmergenSeek/services/geolocator.dart';
 import 'package:EmergenSeek/models/sos_model.dart';
 import 'package:EmergenSeek/models/contacts_model.dart';
+import 'package:EmergenSeek/models/lUpdates_model.dart';
+import 'package:EmergenSeek/models/profile_model.dart';
 
 // Model representing universal state data for the entire application
-class AppModel extends Model with SOSModel, ContactsModel {
+class AppModel extends Model with SOSModel, ContactsModel, ProfileModel, lupdatesModel {
   AppModel({this.auth, this.userId, this.onSignedOut});
 
   BaseAuth auth;
@@ -13,7 +17,7 @@ class AppModel extends Model with SOSModel, ContactsModel {
   String userId;
 
   // Key: latitude/longitude, Val: coordinate
-  Map<String, double> currentLocation;
+  List currentLocation;
 
   void setAuth(BaseAuth auth){
     this.auth = auth;
@@ -25,6 +29,11 @@ class AppModel extends Model with SOSModel, ContactsModel {
 
   void setUserId(String userId){
     this.userId = userId;
+    // Update UID info in feature models
+    setContactsUserId(userId);
+    setSOSUserId(userId);
+    setProfileUserId(userId);
+    setUpdatesUserId(userId);
   }
 
   BaseAuth getAuth(){
@@ -49,10 +58,21 @@ class AppModel extends Model with SOSModel, ContactsModel {
   }
 
   Future updateCurrentPosition() async {
-    currentLocation = await getCurrentLocation();
+    currentLocation = await pollCurrentLocation();
   }
 
-  Map getCurrentLocation() {
+  List getCurrentLocation() {
+    updateCurrentPosition();
     return currentLocation;
+  }
+
+  Future<bool> checkForUser() async {
+    var profile = await getProfile(userId);
+    if(profile == null) return false;
+    else return true;
+  }
+
+  void createNewUser(Map<String, dynamic> profile){
+    createUser(profile);
   }
 }

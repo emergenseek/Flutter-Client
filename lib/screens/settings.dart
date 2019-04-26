@@ -33,7 +33,7 @@ class SettingsHome extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SettingsLocationUpdates()));
+                            builder: (context) => LocationSettingsPage()));
                   },
                 ),
                 ListTile(
@@ -177,9 +177,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                               " when broadcasting mild or severe SOS alerts",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getSendTexts(),//values['displayInfo'],
+                      value: model.getSendTexts(),
                       onChanged: (value) {
-                        model.toggleSendTexts();//onChanged('displayInfo');
+                        model.toggleSendTexts();
                       },
                     ),
                     CheckboxListTile(
@@ -189,9 +189,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                               " when broadcasting severe SOS alerts",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getSendCalls(),//values['displayInfo'],
+                      value: model.getSendCalls(),
                       onChanged: (value) {
-                        model.toggleSendCalls();//onChanged('displayInfo');
+                        model.toggleSendCalls();
                       },
                     ),
                     CheckboxListTile(
@@ -201,21 +201,9 @@ class SettingsSOSState extends State<SettingsSOS> {
                           " the lockscreen after activating SOS mode",
                           style: TextStyle(fontSize: 11.0)),
                       activeColor: Colors.blue[200],
-                      value: model.getDisplayLockscreenInfo(),//values['displayInfo'],
+                      value: model.getDisplayLockscreenInfo(),
                       onChanged: (value) {
-                        model.toggleDisplayLockscreenInfo();//onChanged('displayInfo');
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: Text("Notify Nearby Users"),
-                      subtitle: Text(
-                          "Enable to broadcast nearby EmergenSeek users"
-                          " of your SOS alerts",
-                          style: TextStyle(fontSize: 11.0)),
-                      activeColor: Colors.blue[200],
-                      value: model.getNotifyUsers(),//values['notifyUsers'],
-                      onChanged: (value) {
-                        model.toggleNotifyUsers();//onChanged('notifyUsers');
+                        model.toggleDisplayLockscreenInfo();
                       },
                     ),
                   ],
@@ -284,5 +272,61 @@ class SettingsContactsState extends State<SettingsContacts> {
                     )
               ],
             )));
+  }
+}
+
+class LocationSettingsPage extends StatefulWidget{
+  @override
+  LSettingsState createState(){
+    return new LSettingsState();
+  }
+}
+class LSettingsState extends State<LocationSettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AppModel>(
+        builder: (context, child, model) =>
+            Scaffold(
+                backgroundColor: Colors.blueGrey[400],
+                appBar: AppBar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    title: Text("Location Updates Settings")
+                ),
+                body: ListTileTheme(
+                    textColor: Colors.white,
+                    iconColor: Colors.blue[200],
+                    child: ListView(
+                      children: <Widget>[
+                        CheckboxListTile(
+                          title: Text("8 Hours"),
+                          //subtitle: Text("Enable to include primary contacts in location update"),
+                          activeColor: Colors.blue[200],
+
+                          value: false,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("12 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: false,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("24 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: true,
+                          onChanged: null,
+                        ),
+                        CheckboxListTile(
+                          title: Text("72 Hours"),
+                          activeColor: Colors.blue[200],
+                          value: false,
+                          onChanged: null,
+                        ),
+                      ],
+                    )
+                )
+            )
+    );
   }
 }
